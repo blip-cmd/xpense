@@ -1,0 +1,29 @@
+@startuml
+title Sequence Diagram - Add New Expenditure
+
+actor User
+participant CLIHandler
+participant ExpenditureManager
+participant BankLedger
+participant AlertSystem
+participant FileManager
+
+User -> CLIHandler : Select "Add Expenditure"
+CLIHandler -> User : Prompt for expense details
+User -> CLIHandler : Provide code, amount, date, phase, category, accountId
+
+CLIHandler -> ExpenditureManager : createExpenditure(details)
+ExpenditureManager -> FileManager : saveToFile(expenditures.txt)
+ExpenditureManager --> CLIHandler : return success
+
+CLIHandler -> BankLedger : logExpenditure(accountId, amount)
+BankLedger -> FileManager : update accounts.txt
+BankLedger --> CLIHandler : balance updated
+
+CLIHandler -> AlertSystem : checkLowFunds(accountId)
+AlertSystem -> BankLedger : getBalance(accountId)
+AlertSystem --> CLIHandler : notify if below threshold
+
+CLIHandler -> User : Show "Expenditure added successfully"
+
+@enduml

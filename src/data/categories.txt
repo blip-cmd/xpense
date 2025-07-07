@@ -1,0 +1,10 @@
+# Sample data for testing during development
+
+# Categories (name|description|color)
+Food|Food and dining expenses|green
+Transport|Transportation costs|blue
+Entertainment|Entertainment and leisure|purple
+Utilities|Utilities and bills|red
+Shopping|Shopping and retail|orange
+Health|Healthcare expenses|pink
+Education|Education and learning|yellow

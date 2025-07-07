@@ -1,0 +1,68 @@
+
+
+
+
+of ⁨3⁩
+
+
+
+
+1
+UNIVERSITY OF GHANA
+DEPARTMENT OF COMPUTER SCIENCE
+DCIT308: DATA STRUCTURES AND ALGORITHMS 2
+SECOND SEMESTER 2022/2023
+SEMESTER PROJECT (GROUP)
+Expenditure Management System for Nkwa Real Estate Ltd
+Nkwa Real Estate is a growing construction firm focused on delivering low-cost housing
+solutions across peri-urban communities in Ghana. As the company expands, financial
+monitoring during construction and post-sales activities has become increasingly
+challenging. Accountants must now track multiple bank accounts, fluctuating supplier
+costs, and a maze of construction-phase spending.
+The company lacks a digital solution. You’ve been invited to build a locally stored, offline-
+first Expenditure Tracking Application—built from the ground up using fundamental data
+structures. Your system should simulate accountant workflows, not just automate them.
+Project Tasks
+Develop a menu-driven command-line system that leverages data structures including:
+arrays, stacks, queues, linked lists, sets, maps, trees, hash maps, and graphs. Avoid external
+libraries, databases, or prebuilt sorting/searching modules.
+Functional Requirements
+1. Expenditure Records
+o Record each expenditure with details:
+ Code, amount, date, phase (e.g., construction, marketing, sales),
+category, account used.
+o Store in hash maps or linked lists, allowing retrieval by expenditure code.
+2. Category Management
+o Create a dynamic list of expenditure categories (e.g., “Cement”, “Printing”,
+“TV Adverts”).
+o Implement sets or hash tables to ensure category uniqueness and support
+category searches.
+3. Bank Account Ledger
+2
+o Store and update information about different company bank accounts, each
+with:
+ Account ID, bank name, balance, list of related expenditures.
+o Use maps or dictionaries and create a relationship graph if accounts are
+internally related.
+4. Search & Sort
+o Sort expenditures by:
+ Alphabetical order of category
+ Chronological order of transaction
+o Search by:
+ Time range (e.g., “all expenses in April 2025”)
+ Category
+ Cost range
+ Bank account used
+5. Invoice/Receipt Handling
+o Link each expenditure to a receipt/invoice record stored in a file or internal
+pointer-like structure.
+o Use a queue or stack to simulate upload and review queues for accounting
+validation.
+6. Bank Tracker
+o Every expenditure draws funds from a selected bank account.
+o The application must update balances, log expenditures, and notify if an
+account is low on funds using a min-heap.
+7. Cash Flow & Financial Analysis
+o Implement logic to:
+ Track monthly burn rate.
+ Forecast profitability based on spending patterns.

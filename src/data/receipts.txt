@@ -1,0 +1,3 @@
+# Sample receipts (receiptId|expenseCode|filePath|timestamp)
+REC001|EXP001|/receipts/lunch_receipt.jpg|2025-01-01T12:30:00
+REC002|EXP003|/receipts/grocery_receipt.pdf|2025-01-03T14:15:00

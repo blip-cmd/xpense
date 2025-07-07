@@ -1,0 +1,4 @@
+# Sample expenditures (code|amount|date|phase|category|accountId)
+EXP001|25.50|2025-01-01|Lunch|Food|ACC001
+EXP002|15.00|2025-01-02|Bus fare|Transport|ACC001
+EXP003|100.00|2025-01-03|Groceries|Food|ACC001

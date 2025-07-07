@@ -1,0 +1,127 @@
+title Personal Finance Management Program Flow
+direction right
+
+// Initialization
+Start Program [shape: oval, color: lightblue, icon: play]
+Load Text Files [color: lightblue, icon: file-text]
+Show Main Menu [color: blue, icon: menu]
+
+// Main Menu Options
+Menu Options [color: blue, icon: list] {
+  Expenditure Management [icon: dollar-sign, color: orange]
+  Category Management [icon: tag, color: purple]
+  Bank Overview [icon: credit-card, color: teal]
+  Receipt Handling [icon: file, color: yellow]
+  Financial Reports [icon: bar-chart, color: green]
+  Exit Program [icon: log-out, color: red]
+}
+
+// Expenditure Management Group
+Expenditure Management {
+  Expenditure Choice [shape: diamond, color: orange, icon: list]
+  Add Expenditure [icon: plus-circle, color: orange]
+  Save Expenditure [icon: save, color: orange]
+  View All Expenditures [icon: eye, color: orange]
+  Search Expenditure [icon: search, color: orange]
+  Display Search Results [icon: list, color: orange]
+  Sort Expenditures [icon: filter, color: orange]
+  Display Sorted Expenditures [icon: list, color: orange]
+}
+
+// Category Management Group
+Category Management {
+  Category Choice [shape: diamond, color: purple, icon: list]
+  Add Category [icon: plus-circle, color: purple]
+  Save Category [icon: save, color: purple]
+  Search Category [icon: search, color: purple]
+  Display Category Matches [icon: list, color: purple]
+}
+
+// Bank Overview Group
+Bank Overview {
+  Bank Overview Choice [shape: diamond, color: teal, icon: list]
+  Display Accounts [icon: users, color: teal]
+  Show Expenses by Account [icon: pie-chart, color: teal]
+  Check for Low Funds [shape: diamond, color: teal, icon: alert-triangle]
+  Show Low Balance Alerts [icon: alert-triangle, color: red]
+}
+
+// Receipt Handling Group
+Receipt Handling {
+  Receipt Choice [shape: diamond, color: yellow, icon: list]
+  Upload Receipt [icon: upload, color: yellow]
+  Save Receipt [icon: save, color: yellow]
+  Review Receipt [icon: eye, color: yellow]
+}
+
+// Financial Reports Group
+Financial Reports {
+  Report Choice [shape: diamond, color: green, icon: list]
+  Run Analytics [icon: activity, color: green]
+  Display Report [icon: bar-chart, color: green]
+}
+
+// Exit Group
+Exit Program {
+  Save All Data [icon: save, color: red]
+  End Program [shape: oval, color: pink, icon: stop-circle]
+}
+
+// Relationships
+Start Program > Load Text Files
+Load Text Files > Show Main Menu
+Show Main Menu > Menu Options
+
+// Menu Options
+Menu Options > Expenditure Management
+Menu Options > Category Management
+Menu Options > Bank Overview
+Menu Options > Receipt Handling
+Menu Options > Financial Reports
+Menu Options > Exit Program
+
+// Expenditure Management Flow
+Expenditure Choice > Add Expenditure: Add
+Add Expenditure > Save Expenditure
+Expenditure Choice > View All Expenditures: View All
+Expenditure Choice > Search Expenditure: Search
+Search Expenditure > Display Search Results
+Expenditure Choice > Sort Expenditures: Sort
+Sort Expenditures > Display Sorted Expenditures
+
+// Category Management Flow
+Category Choice > Add Category: Add
+Add Category > Save Category
+Category Choice > Search Category: Search
+Search Category > Display Category Matches
+
+// Bank Overview Flow
+Bank Overview Choice > Display Accounts: View accounts
+Bank Overview Choice > Show Expenses by Account: Expenses per account
+Bank Overview Choice > Check for Low Funds: Balance summary
+Check for Low Funds > Show Low Balance Alerts: Yes
+
+// Receipt Handling Flow
+Receipt Choice > Upload Receipt: Upload Receipt
+Upload Receipt > Save Receipt
+Receipt Choice > Review Receipt: Review Receipts
+
+// Financial Reports Flow
+Report Choice > Run Analytics
+Run Analytics > Display Report
+
+// Exit Flow
+Save All Data > End Program
+Show Main Menu < Save Expenditure
+Show Main Menu < View All Expenditures
+Show Main Menu < Display Search Results
+Show Main Menu < Display Sorted Expenditures
+Show Main Menu < Save Category
+Show Main Menu < Display Category Matches
+Show Main Menu < Display Accounts
+Show Main Menu < Show Expenses by Account
+Show Main Menu < Show Low Balance Alerts
+Show Main Menu < Check for Low Funds: No
+Show Main Menu < Save Receipt
+Show Main Menu < Review Receipt
+Show Main Menu < Display Report

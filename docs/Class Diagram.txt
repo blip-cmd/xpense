@@ -1,0 +1,72 @@
+@startuml
+
+title Class Diagram - Nkwa CLI Financial Tracker
+
+class Expenditure {
+  - code: String
+  - amount: float
+  - date: String
+  - phase: String
+  - category: String
+  - bankAccountId: String
+  + get_summary(): String
+}
+
+class BankAccount {
+  - accountId: String
+  - accountName: String
+  - balance: float
+  - expenditures: List<Expenditure>
+  + get_balance(): float
+  + add_expenditure(e: Expenditure): void
+}
+
+class Category {
+  - name: String
+  + is_valid(): bool
+}
+
+class Receipt {
+  - receiptId: String
+  - expenseCode: String
+  - filePath: String
+  - timestamp: String
+}
+
+class ReceiptHandler {
+  - stack: Stack<Receipt>
+  - queue: Queue<Receipt>
+  + upload_receipt(r: Receipt): void
+  + review_next(): Receipt
+}
+
+class CLIHandler {
+  + display_menu(): void
+  + handle_input(): void
+}
+
+class AnalyticsModule {
+  + calculate_monthly_burn(): float
+  + generate_cost_analysis(): String
+  + get_affordability_insights(): String
+}
+
+class FileManager {
+  + load_data(): void
+  + save_data(): void
+}
+
+' Relationships
+Expenditure --> Category : "uses"
+Expenditure --> BankAccount : "belongs to"
+BankAccount --> Expenditure : "logs"
+Receipt --> Expenditure : "linked to"
+ReceiptHandler --> Receipt : "manages"
+CLIHandler --> AnalyticsModule : "uses"
+CLIHandler --> FileManager : "uses"
+CLIHandler --> ReceiptHandler : "uses"
+CLIHandler --> BankAccount : "manages"
+CLIHandler --> Category : "manages"
+CLIHandler --> Expenditure : "manages"
+
+@enduml

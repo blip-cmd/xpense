@@ -1,0 +1,4 @@
+# Sample bank accounts (accountId|accountName|balance)
+ACC001|Main Checking Account|1500.00
+ACC002|Savings Account|5000.00
+ACC003|Credit Card|2000.00
