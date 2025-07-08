@@ -1,69 +1,86 @@
 package app.modules;
 
+import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.LinkedList;
+import java.util.Comparator;
 
 /**
  * Manages system alerts and notifications
- * TODO: Implement the complete AlertSystem class
  */
 public class AlertSystem {
-    // TODO: Add fields for alert management
-    // private Queue<Alert> alertQueue;
-    // private double lowBalanceThreshold;
-    // private double spendingLimitThreshold;
-    
+
+    private static class Alert {
+        String message;
+        int priority; // Lower value = higher priority
+
+        public Alert(String message, int priority) {
+            this.message = message;
+            this.priority = priority;
+        }
+    }
+
+    // PriorityQueue based on priority (lower value = higher priority)
+    private Queue<Alert> alertQueue;
+    private double lowBalanceThreshold;
+    private double spendingLimitThreshold;
+
     /**
      * Constructor for AlertSystem
-     * TODO: Implement constructor with proper initialization
      */
-    public AlertSystem() {
-        // TODO: Initialize alert system
+    public AlertSystem(double lowBalanceThreshold, double spendingLimitThreshold) {
+        this.lowBalanceThreshold = lowBalanceThreshold;
+        this.spendingLimitThreshold = spendingLimitThreshold;
+        this.alertQueue = new PriorityQueue<>(Comparator.comparingInt(a -> a.priority));
     }
-    
+
     /**
      * Check for low funds alert
-     * TODO: Implement low funds checking
-     * @param accountId the account to check
-     * @param currentBalance the current balance
-     * @return true if alert should be triggered
      */
     public boolean checkLowFunds(String accountId, double currentBalance) {
-        // TODO: Implement low funds check
+        if (currentBalance < lowBalanceThreshold) {
+            addAlert("Account " + accountId + " is low on funds: ₵" + currentBalance, 1);
+            return true;
+        }
         return false;
     }
-    
+
     /**
      * Add alert to queue
-     * TODO: Implement alert queuing
-     * @param message the alert message
-     * @param priority the alert priority
      */
     public void addAlert(String message, int priority) {
-        // TODO: Implement alert addition
+        alertQueue.offer(new Alert(message, priority));
     }
-    
+
     /**
      * Get next alert from queue
-     * TODO: Implement alert retrieval
-     * @return next alert message or null if empty
      */
     public String getNextAlert() {
-        // TODO: Implement alert retrieval
-        return null;
+        Alert alert = alertQueue.poll();
+        return (alert != null) ? alert.message : null;
     }
-    
+
     /**
      * Check spending limits
-     * TODO: Implement spending limit checking
-     * @param categorySpending current spending in category
-     * @param limit the spending limit
-     * @return true if limit exceeded
      */
     public boolean checkSpendingLimit(double categorySpending, double limit) {
-        // TODO: Implement spending limit check
+        if (categorySpending > limit) {
+            addAlert("Spending limit exceeded for category: ₵" + categorySpending + " > ₵" + limit, 2);
+            return true;
+        }
         return false;
     }
-    
-    // TODO: Add more methods as needed
+
+    /**
+     * Show all alerts
+     */
+    public void displayAllAlerts() {
+        if (alertQueue.isEmpty()) {
+            System.out.println("[✔] No active alerts.");
+        } else {
+            System.out.println("=== ALERTS ===");
+            while (!alertQueue.isEmpty()) {
+                System.out.println("• " + getNextAlert());
+            }
+        }
+    }
 }
