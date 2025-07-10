@@ -5,20 +5,20 @@ package app.modules;
  * TODO: Implement the complete Category class
  */
 public class Category {
-    // TODO: Add fields for category data
-    // private String id;
-    // private String name;
-    // private String description;
-    // private String color; // for UI purposes
-    
+    // fields for category data
+    private String id;
+    private String name;
+    private String description;
+    private String color; // for UI purposes
+
     /**
      * Constructor for Category
      * TODO: Implement constructor with proper parameters
      */
-    public Category() {
+    public Category(id,name,description,color) {
         // TODO: Initialize category fields
     }
-    
+
     /**
      * Get category ID
      * TODO: Implement ID retrieval
@@ -28,7 +28,7 @@ public class Category {
         // TODO: Return actual ID
         return "";
     }
-    
+
     /**
      * Get category name
      * TODO: Implement name retrieval
@@ -38,7 +38,7 @@ public class Category {
         // TODO: Return actual name
         return "";
     }
-    
+
     /**
      * Validate category data
      * TODO: Implement validation logic
@@ -48,6 +48,6 @@ public class Category {
         // TODO: Implement validation
         return false;
     }
-    
+
     // TODO: Add more methods as needed
 }

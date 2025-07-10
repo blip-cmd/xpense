@@ -13,7 +13,7 @@ public class CategoryManager {
     // TODO: Add fields for category management
     // private HashSet<Category> categories;
     // private HashMap<String, List<Expenditure>> categoryExpenditures;
-    
+
     /**
      * Constructor for CategoryManager
      * TODO: Implement constructor with proper initialization
@@ -21,7 +21,7 @@ public class CategoryManager {
     public CategoryManager() {
         // TODO: Initialize category manager
     }
-    
+
     /**
      * Add a new category
      * TODO: Implement category addition with validation
@@ -32,7 +32,7 @@ public class CategoryManager {
         // TODO: Implement category addition
         return false;
     }
-    
+
     /**
      * Search for categories by name
      * TODO: Implement category search
@@ -43,7 +43,7 @@ public class CategoryManager {
         // TODO: Implement category search
         return new ArrayList<>();
     }
-    
+
     /**
      * Validate if a category exists
      * TODO: Implement category validation
@@ -54,7 +54,7 @@ public class CategoryManager {
         // TODO: Implement category validation
         return false;
     }
-    
+
     /**
      * Get all categories
      * TODO: Implement category retrieval
@@ -64,7 +64,7 @@ public class CategoryManager {
         // TODO: Implement category retrieval
         return new ArrayList<>();
     }
-    
+
     /**
      * Get category usage statistics
      * TODO: Implement category statistics
@@ -75,7 +75,7 @@ public class CategoryManager {
         // TODO: Implement category statistics
         return "Statistics not implemented yet";
     }
-    
+
     /**
      * Delete a category
      * TODO: Implement category deletion
@@ -86,6 +86,6 @@ public class CategoryManager {
         // TODO: Implement category deletion
         return false;
     }
-    
+
     // TODO: Add more methods as needed
 }
