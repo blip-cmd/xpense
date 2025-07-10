@@ -1,53 +1,90 @@
 package app.modules;
 
 /**
- * Represents a category for organizing expenditures
- * TODO: Implement the complete Category class
+ * Represents a category for organizing expenditures.
+ * Each category has a unique name, optional description, and color for UI.
  */
 public class Category {
-    // TODO: Add fields for category data
-    // private String id;
-    // private String name;
-    // private String description;
-    // private String color; // for UI purposes
-    
+    private String name;
+    private String description;
+    private String color;
+
     /**
-     * Constructor for Category
-     * TODO: Implement constructor with proper parameters
+     * Constructs a Category with the required name.
+     * @param name The unique name of the category.
      */
-    public Category() {
-        // TODO: Initialize category fields
+    public Category(String name) {
+        this(name, "", "");
     }
-    
+
     /**
-     * Get category ID
-     * TODO: Implement ID retrieval
-     * @return category ID
+     * Constructs a Category with name, description, and color.
+     * @param name The unique name of the category.
+     * @param description A description of the category.
+     * @param color A color label for UI (optional).
      */
-    public String getId() {
-        // TODO: Return actual ID
-        return "";
+    public Category(String name, String description, String color) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Category name cannot be empty.");
+        }
+        this.name = name.trim();
+        this.description = description == null ? "" : description.trim();
+        this.color = color == null ? "" : color.trim();
     }
-    
+
     /**
-     * Get category name
-     * TODO: Implement name retrieval
+     * Get the category name (unique identifier).
      * @return category name
      */
     public String getName() {
-        // TODO: Return actual name
-        return "";
+        return name;
     }
-    
+
     /**
-     * Validate category data
-     * TODO: Implement validation logic
-     * @return true if valid, false otherwise
+     * Get the category description.
+     * @return description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Get the category color.
+     * @return color
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * Validate category data.
+     * @return true if the category name is not empty, false otherwise
      */
     public boolean isValid() {
-        // TODO: Implement validation
-        return false;
+        return name != null && !name.trim().isEmpty();
     }
-    
-    // TODO: Add more methods as needed
+
+    /**
+     * Two categories are equal if their names are equal (case-insensitive).
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Category)) return false;
+        Category other = (Category) obj;
+        return this.name.equalsIgnoreCase(other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.toLowerCase().hashCode();
+    }
+
+    /**
+     * String representation for debugging.
+     */
+    @Override
+    public String toString() {
+        return String.format("Category{name='%s', description='%s', color='%s'}", name, description, color);
+    }
 }

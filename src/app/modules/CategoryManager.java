@@ -1,91 +1,191 @@
 package app.modules;
 
-import java.util.HashSet;
-import java.util.HashMap;
+import app.util.SimpleSet;
+import app.util.SimpleMap;
 import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Manages category operations and validation
- * TODO: Implement the complete CategoryManager class
+ * Manages category operations and validation using custom data structures.
  */
 public class CategoryManager {
-    // TODO: Add fields for category management
-    // private HashSet<Category> categories;
-    // private HashMap<String, List<Expenditure>> categoryExpenditures;
-    
-    /**
-     * Constructor for CategoryManager
-     * TODO: Implement constructor with proper initialization
-     */
+    private SimpleSet<Category> categories;
+    private SimpleMap<String, List<Object>> categoryExpenditures; // Replace Object with Expenditure if available
+
     public CategoryManager() {
-        // TODO: Initialize category manager
+        categories = new SimpleSet<>();
+        categoryExpenditures = new SimpleMap<>();
     }
-    
-    /**
-     * Add a new category
-     * TODO: Implement category addition with validation
-     * @param category the category to add
-     * @return true if successful, false otherwise
-     */
+
     public boolean addCategory(Category category) {
-        // TODO: Implement category addition
-        return false;
+        if (category == null || !category.isValid()) return false;
+        if (categories.contains(category)) return false;
+        categories.add(category);
+        if (!categoryExpenditures.containsKey(category.getName())) {
+            categoryExpenditures.put(category.getName(), new ArrayList<>());
+        }
+        return true;
     }
-    
-    /**
-     * Search for categories by name
-     * TODO: Implement category search
-     * @param searchTerm the search term
-     * @return list of matching categories
-     */
+
     public List<Category> searchCategories(String searchTerm) {
-        // TODO: Implement category search
-        return new ArrayList<>();
+        List<Category> result = new ArrayList<>();
+        if (searchTerm == null) return result;
+        String term = searchTerm.trim().toLowerCase();
+        for (Category c : categories) {
+            if (c.getName().toLowerCase().contains(term)) {
+                result.add(c);
+            }
+        }
+        return result;
     }
-    
-    /**
-     * Validate if a category exists
-     * TODO: Implement category validation
-     * @param categoryName the category name to validate
-     * @return true if category exists, false otherwise
-     */
+
     public boolean validateCategory(String categoryName) {
-        // TODO: Implement category validation
+        if (categoryName == null) return false;
+        for (Category c : categories) {
+            if (c.getName().equalsIgnoreCase(categoryName)) {
+                return true;
+            }
+        }
         return false;
     }
-    
-    /**
-     * Get all categories
-     * TODO: Implement category retrieval
-     * @return list of all categories
-     */
+
     public List<Category> getAllCategories() {
-        // TODO: Implement category retrieval
-        return new ArrayList<>();
+        return categories.toList();
     }
-    
-    /**
-     * Get category usage statistics
-     * TODO: Implement category statistics
-     * @param categoryName the category name
-     * @return usage statistics string
-     */
+
     public String getCategoryStatistics(String categoryName) {
-        // TODO: Implement category statistics
-        return "Statistics not implemented yet";
+        if (!validateCategory(categoryName)) return "Category not found.";
+        int count = 0;
+        List<Object> expenditures = categoryExpenditures.get(categoryName);
+        if (expenditures != null) count = expenditures.size();
+        return "Expenditures in '" + categoryName + "': " + count;
     }
-    
+
     /**
-     * Delete a category
-     * TODO: Implement category deletion
-     * @param categoryName the category name to delete
-     * @return true if successful, false otherwise
+     * Delete a category by name.
+     * @param categoryName The name of the category to delete
+     * @return true if category was deleted, false if not found
      */
     public boolean deleteCategory(String categoryName) {
-        // TODO: Implement category deletion
+        if (categoryName == null || categoryName.trim().isEmpty()) return false;
+        
+        // Find and remove the category
+        Category toRemove = null;
+        for (Category c : categories) {
+            if (c.getName().equalsIgnoreCase(categoryName.trim())) {
+                toRemove = c;
+                break;
+            }
+        }
+        
+        if (toRemove != null) {
+            categories.remove(toRemove);
+            categoryExpenditures.remove(categoryName);
+            return true;
+        }
         return false;
     }
-    
-    // TODO: Add more methods as needed
+
+    /**
+     * Update an existing category's details.
+     * @param oldName The current name of the category
+     * @param newCategory The updated category object
+     * @return true if update was successful, false otherwise
+     */
+    public boolean updateCategory(String oldName, Category newCategory) {
+        if (oldName == null || newCategory == null || !newCategory.isValid()) return false;
+        
+        // Check if old category exists
+        Category oldCategory = null;
+        for (Category c : categories) {
+            if (c.getName().equalsIgnoreCase(oldName.trim())) {
+                oldCategory = c;
+                break;
+            }
+        }
+        
+        if (oldCategory != null) {
+            categories.remove(oldCategory);
+            categories.add(newCategory);
+            
+            // Update expenditure mapping if name changed
+            if (!oldName.equalsIgnoreCase(newCategory.getName())) {
+                List<Object> expenditures = categoryExpenditures.get(oldName);
+                if (expenditures != null) {
+                    categoryExpenditures.remove(oldName);
+                    categoryExpenditures.put(newCategory.getName(), expenditures);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the number of categories.
+     * @return total number of categories
+     */
+    public int getCategoryCount() {
+        return categories.size();
+    }
+
+    /**
+     * Check if no categories exist.
+     * @return true if no categories exist
+     */
+    public boolean isEmpty() {
+        return categories.size() == 0;
+    }
+
+    /**
+     * Add an expenditure to a category's tracking list.
+     * @param categoryName The category name
+     * @param expenditure The expenditure to add
+     * @return true if added successfully
+     */
+    public boolean addExpenditureToCategory(String categoryName, Object expenditure) {
+        if (!validateCategory(categoryName) || expenditure == null) return false;
+        
+        List<Object> expenditures = categoryExpenditures.get(categoryName);
+        if (expenditures != null) {
+            expenditures.add(expenditure);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get detailed statistics for all categories.
+     * @return formatted string with all category statistics
+     */
+    public String getAllCategoryStatistics() {
+        if (categories.size() == 0) {
+            return "No categories available.";
+        }
+        
+        StringBuilder stats = new StringBuilder();
+        stats.append("=== CATEGORY STATISTICS ===\n");
+        stats.append(String.format("Total Categories: %d\n\n", categories.size()));
+        
+        for (Category category : categories) {
+            List<Object> expenditures = categoryExpenditures.get(category.getName());
+            int count = expenditures != null ? expenditures.size() : 0;
+            stats.append(String.format("• %s: %d expenditures\n", 
+                                     category.getName(), count));
+            if (!category.getDescription().isEmpty()) {
+                stats.append(String.format("  Description: %s\n", category.getDescription()));
+            }
+            stats.append("\n");
+        }
+        
+        return stats.toString();
+    }
+
+    /**
+     * Clear all categories and their associated data.
+     */
+    public void clearAllCategories() {
+        categories = new SimpleSet<>();
+        categoryExpenditures = new SimpleMap<>();
+    }
 }
