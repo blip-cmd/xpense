@@ -7,23 +7,25 @@ package app.modules;
  * TODO: Implement the complete Category class
  */
 public class Category {
-    // TODO: Add fields for category data
+    // done
     private String id;
     private String name;
     private String description;
     private String color; // for UI purposes
     
+
     /**
      * Constructor for Category
-     * TODO: Implement constructor with proper parameters
+
      */
     public Category(String id, String name, String description, String color) {
-        // TODO: Initialize category fields
+       
         this.id = id;
         this.name = name;
         this.description = description;
         this.color = color;
     }
+    
     
     /**
      * Get category ID
@@ -39,7 +41,7 @@ public class Category {
      * @return category name
      */
     public String getName() {
-        // TODO: Return actual name
+      
         return name;
     }
 
@@ -49,17 +51,16 @@ public class Category {
      * @return category name
      */
     public String getDescription() {
-        // TODO: Return actual name
+      
         return description;
     }
 
     /**
      * Get category name
-     * TODO: Implement name retrieval
+   
      * @return category name
      */
     public String getColor() {
-        // TODO: Return actual name
         return color;
     }
     
@@ -68,7 +69,7 @@ public class Category {
      * @return true if valid, false otherwise
      */
     public boolean isValid() {
-        // TODO: Implement validation
+        
         return id != null && !id.isBlank()
             && description != null && !description.isBlank()
             && name != null && name.isBlank()
@@ -102,6 +103,6 @@ public class Category {
                 '}';
     }
     
-    // TODO: Add more methods as needed
+    
     
 }

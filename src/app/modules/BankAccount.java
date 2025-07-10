@@ -2,8 +2,8 @@ package app.modules;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import app.util.List;
+import app.util.ArrayList;
 
 /**
  * Represents a bank account in the expenditure management system.
@@ -14,7 +14,7 @@ public class BankAccount {
     private String accountName;
     private BigDecimal balance;
     private LocalDate createdDate;
-    private List<Expenditure> expenditures = new ArrayList<>();
+    private ArrayList<Expenditure> expenditures = new ArrayList<>();
 
     /**
      * Constructor for BankAccount.
@@ -47,7 +47,7 @@ public class BankAccount {
         return createdDate;
     }
 
-    public List<Expenditure> getExpenditures() {
+    public ArrayList<Expenditure> getExpenditures() {
         return expenditures;
     }
 
@@ -107,7 +107,7 @@ public class BankAccount {
         this.createdDate = createdDate;
     }
 
-    public void setExpenditures(List<Expenditure> expenditures) {
+    public void setExpenditures(ArrayList<Expenditure> expenditures) {
         this.expenditures = expenditures;
     }
 
@@ -118,6 +118,7 @@ public class BankAccount {
                 ", accountName='" + accountName + '\'' +
                 ", balance=" + balance +
                 ", createdDate=" + createdDate +
+                ", expenditures=" + expenditures +
                 '}';
     }
 }
