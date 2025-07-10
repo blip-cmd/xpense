@@ -1,6 +1,6 @@
 package app.modules;
 
-import java.math.BigDecimal;
+// import java.math.BigDecimal;
 
 /**
  * Represents a category for organizing expenditures
@@ -65,7 +65,6 @@ public class Category {
     
     /**
      * Validate category data
-     * TODO: Implement validation logic
      * @return true if valid, false otherwise
      */
     public boolean isValid() {
@@ -76,5 +75,33 @@ public class Category {
             && color != null;
     }
     
+    // Setters for each field
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", color='" + color + '\'' +
+                '}';
+    }
+    
     // TODO: Add more methods as needed
+    
 }
