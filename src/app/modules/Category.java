@@ -1,39 +1,39 @@
 package app.modules;
 
+// import java.math.BigDecimal;
+
 /**
- * Represents a category for organizing expenditures.
- * Each category has a unique name, optional description, and color for UI.
+ * Represents a category for organizing expenditures
+ * TODO: Implement the complete Category class
  */
 public class Category {
+
+    private String id;
     private String name;
     private String description;
-    private String color;
+    private String color; // for UI purposes
+    
+    
 
-    /**
-     * Constructs a Category with the required name.
-     * @param name The unique name of the category.
-     */
-    public Category(String name) {
-        this(name, "", "");
+     public Category(String id, String name, String description, String color) {
+
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.color = color;
     }
-
+    
     /**
-     * Constructs a Category with name, description, and color.
-     * @param name The unique name of the category.
-     * @param description A description of the category.
-     * @param color A color label for UI (optional).
+     * Get category ID
+     * @return category ID
      */
-    public Category(String name, String description, String color) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Category name cannot be empty.");
-        }
-        this.name = name.trim();
-        this.description = description == null ? "" : description.trim();
-        this.color = color == null ? "" : color.trim();
+    public String getId() {
+        return id;
     }
-
+    
+    
     /**
-     * Get the category name (unique identifier).
+     * Get category name
      * @return category name
      */
     public String getName() {
@@ -41,50 +41,25 @@ public class Category {
     }
 
     /**
-     * Get the category description.
-     * @return description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Get the category color.
-     * @return color
-     */
-    public String getColor() {
-        return color;
-    }
-
-    /**
-     * Validate category data.
-     * @return true if the category name is not empty, false otherwise
+     * Validate category data
+     * @return true if valid, false otherwise
      */
     public boolean isValid() {
-        return name != null && !name.trim().isEmpty();
-    }
 
-    /**
-     * Two categories are equal if their names are equal (case-insensitive).
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Category)) return false;
-        Category other = (Category) obj;
-        return this.name.equalsIgnoreCase(other.name);
+        return id != null && !id.trim().isEmpty() &&
+               name != null && !name.trim().isEmpty() &&
+               description != null && !description.trim().isEmpty() &&
+               color != null && !color.trim().isEmpty();
     }
-
-    @Override
-    public int hashCode() {
-        return name.toLowerCase().hashCode();
-    }
-
-    /**
-     * String representation for debugging.
-     */
+    
+    // done
     @Override
     public String toString() {
-        return String.format("Category{name='%s', description='%s', color='%s'}", name, description, color);
+        return "Category{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", color='" + color + '\'' +
+                '}';
     }
 }

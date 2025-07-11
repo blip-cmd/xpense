@@ -2,57 +2,123 @@ package app.modules;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.*;
+
 
 /**
- * Represents a bank account in the expenditure management system
- * TODO: Implement the complete BankAccount class with proper data structures
+ * Represents a bank account in the expenditure management system.
  */
 public class BankAccount {
-    // TODO: Add fields for account management
-    // private String accountNumber;
-    // private String accountName;
-    // private BigDecimal balance;
-    // private LocalDate createdDate;
-    
+    // Fields
+    private String accountNumber;
+    private String accountName;
+    private BigDecimal balance;
+    private LocalDate createdDate;
+    private ArrayList<Expenditure> expenditures = new ArrayList<>();
+
     /**
-     * Constructor for BankAccount
-     * TODO: Implement constructor with proper parameters
+     * Constructor for BankAccount.
+     * Initializes account with values and sets balance to 0.
      */
-    public BankAccount() {
-        // TODO: Initialize account fields
+    public BankAccount(String accountNumber, String accountName) {
+        this.accountNumber = accountNumber;
+        this.accountName = accountName;
+        this.balance = BigDecimal.ZERO;
+        this.createdDate = LocalDate.now();
     }
-    
-    /**
-     * Get account balance
-     * TODO: Implement balance retrieval
-     * @return current account balance
-     */
+
+    // Getter for account balance
     public BigDecimal getBalance() {
-        // TODO: Return actual balance
-        return BigDecimal.ZERO;
+        return balance;
     }
-    
+
+    // Getter for account number
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    // Getter for account name
+    public String getAccountName() {
+        return accountName;
+    }
+
+    // Getter for created date
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public ArrayList<Expenditure> getExpenditures() {
+        return expenditures;
+    }
+
+    // Returns the current balance as a float
+    public float get_balance() {
+        return balance.floatValue();
+    }
+
+    // Adds an expenditure and debits the account
+    public void add_expenditure(Expenditure e) {
+        if (e != null && e.isValid() && debit(e.getAmount())) {
+            expenditures.add(e);
+        }
+    }
+
     /**
-     * Debit account (subtract amount)
-     * TODO: Implement debit operation with validation
-     * @param amount amount to debit
-     * @return true if successful, false otherwise
+     * Debit account (subtract amount).
+     * Returns false if amount is invalid or insufficient funds.
      */
     public boolean debit(BigDecimal amount) {
-        // TODO: Implement debit logic
-        return false;
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            return false; // Invalid amount
+        }
+        if (balance.compareTo(amount) < 0) {
+            return false; // Not enough balance
+        }
+        balance = balance.subtract(amount);
+        return true;
     }
-    
+
     /**
-     * Credit account (add amount)
-     * TODO: Implement credit operation
-     * @param amount amount to credit
-     * @return true if successful, false otherwise
+     * Credit account (add amount).
+     * Returns false if amount is invalid.
      */
     public boolean credit(BigDecimal amount) {
-        // TODO: Implement credit logic
-        return false;
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            return false; // Invalid amount
+        }
+        balance = balance.add(amount);
+        return true;
     }
-    
-    // TODO: Add more methods as needed
+
+    // Setters for all fields
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setExpenditures(ArrayList<Expenditure> expenditures) {
+        this.expenditures = expenditures;
+    }
+
+    @Override
+    public String toString() {
+        return "BankAccount{" +
+                "accountNumber='" + accountNumber + '\'' +
+                ", accountName='" + accountName + '\'' +
+                ", balance=" + balance +
+                ", createdDate=" + createdDate +
+                ", expenditures=" + expenditures +
+                '}';
+    }
 }
