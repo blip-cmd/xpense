@@ -51,6 +51,7 @@ public class Expenditure {
      */
     public String getDescription() {
         return description;
+    
     }
 
     
