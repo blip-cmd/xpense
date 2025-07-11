@@ -41,9 +41,57 @@ public class Category {
     }
 
     /**
+     * Get category description
+     * @return category description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Get category color
+     * @return category color
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * Set category ID
+     * @param id category ID
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
+     * Set category name
+     * @param name category name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Set category description
+     * @param description category description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Set category color
+     * @param color category color
+     */
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    /**
      * Validate category data
      * @return true if valid, false otherwise
-     */
+     */ 
     public boolean isValid() {
 
         return id != null && !id.trim().isEmpty() &&
