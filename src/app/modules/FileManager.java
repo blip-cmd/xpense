@@ -1,114 +1,268 @@
 package app.modules;
 
 import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.math.BigDecimal;
 
 /**
- * Manages file I/O operations for all data persistence
- * TODO: Implement the complete FileManager class
+ * FileManager handles all file I/O for data persistence in the Xpense system.
+ * - Loads and saves expenditures, categories, accounts, and receipts.
+ * - Uses efficient data structures (ArrayList, BufferedReader/Writer).
+ * - Provides backup and restore functionality.
+ * - Handles file format validation and error recovery.
+ * - Integrates with all modules via simple, consistent methods.
  */
 public class FileManager {
-    // TODO: Add fields for file management
-    // private String dataDirectory;
-    // private String backupDirectory;
-    
-    /**
-     * Constructor for FileManager
-     * TODO: Implement constructor with proper initialization
-     */
+    // Define where the data and backup files will be stored
+    private final String dataDir = "src/data/";
+    private final String backupDir = "src/data/backup/";
+
+    //Ensures backup directory exists when the app runs.
     public FileManager() {
-        // TODO: Initialize file manager
+        File backup = new File(backupDir);
+        if (!backup.exists()) {
+            backup.mkdirs();
+        }
     }
-    
+
     /**
-     * Load expenditures from file
-     * TODO: Implement expenditure loading
-     * @param filename the file to load from
-     * @return list of expenditures
+     * Load expenditures from file (expenditures.txt)
+     * Each line has: code|amount|date|phase|category|accountId
+     * Returns a list of Expenditure objects.
      */
     public List<Expenditure> loadExpenditures(String filename) {
-        // TODO: Implement expenditure loading
-        return new ArrayList<>();
+        List<Expenditure> expenditures = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length != 6) continue; // skip invalid lines
+                try {
+                    // Parse fields (assumes Expenditure constructor: code, amount, date, phase, category, accountId)
+                    String code = parts[0];
+                    BigDecimal amount = new BigDecimal(parts[1]);
+                    LocalDate date = LocalDate.parse(parts[2]);
+                    String phase = parts[3];
+                    String category = parts[4];
+                    String accountId = parts[5];
+                    expenditures.add(new Expenditure(code, amount, date, phase, category, accountId));
+                } catch (Exception e) {
+                    // Skip malformed lines
+                }
+            }
+        } catch (IOException e) {
+            // File not found or read error: return empty list
+        }
+        return expenditures;
     }
-    
+
     /**
-     * Save expenditures to file
-     * TODO: Implement expenditure saving
-     * @param expenditures list of expenditures to save
-     * @param filename the file to save to
-     * @return true if successful, false otherwise
+     * Save expenditures to file (expenditures.txt)
+     * Each Expenditure is serialized as: code|amount|date|phase|category|accountId
+     * Returns true if successful.
      */
     public boolean saveExpenditures(List<Expenditure> expenditures, String filename) {
-        // TODO: Implement expenditure saving
-        return false;
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + filename))) {
+            for (Expenditure exp : expenditures) {
+                // Assumes Expenditure has appropriate getters
+                String line = String.join("|",
+                        exp.getCode(),
+                        exp.getAmount().toString(),
+                        exp.getDate().toString(),
+                        exp.getPhase(),
+                        exp.getCategory(),
+                        exp.getBankAccountId()
+                );
+                bw.write(line);
+                bw.newLine();
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
-    
+
     /**
-     * Load categories from file
-     * TODO: Implement category loading
-     * @param filename the file to load from
-     * @return list of categories
+     * Load categories from file (categories.txt)
+     * Each line: name|description|color
+     * Returns a list of Category objects.
      */
     public List<Category> loadCategories(String filename) {
-        // TODO: Implement category loading
-        return new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length != 3) continue;
+                try {
+                    String name = parts[0];
+                    String description = parts[1];
+                    String color = parts[2];
+                    categories.add(new Category(name, description, color));
+                } catch (Exception e) {
+                    // Skip malformed lines
+                }
+            }
+        } catch (IOException e) {
+            // File not found or read error: return empty list
+        }
+        return categories;
     }
-    
+
     /**
-     * Save categories to file
-     * TODO: Implement category saving
-     * @param categories list of categories to save
-     * @param filename the file to save to
-     * @return true if successful, false otherwise
+     * Save categories to file (categories.txt)
+     * Each Category is serialized as: name|description|color
+     * Returns true if successful.
      */
     public boolean saveCategories(List<Category> categories, String filename) {
-        // TODO: Implement category saving
-        return false;
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + filename))) {
+            for (Category cat : categories) {
+                String line = String.join("|", cat.getName(), cat.getDescription(), cat.getColor());
+                bw.write(line);
+                bw.newLine();
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
-    
+
     /**
-     * Load bank accounts from file
-     * TODO: Implement account loading
-     * @param filename the file to load from
-     * @return list of bank accounts
+     * Load bank accounts from file (accounts.txt)
+     * Each line: accountId|accountName|balance
+     * Returns a list of BankAccount objects.
      */
     public List<BankAccount> loadAccounts(String filename) {
-        // TODO: Implement account loading
-        return new ArrayList<>();
+        List<BankAccount> accounts = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length != 3) continue;
+                try {
+                    String id = parts[0];
+                    String name = parts[1];
+                    BigDecimal balance = new BigDecimal(parts[2]);
+                    accounts.add(new BankAccount(id, name, balance));
+                } catch (Exception e) {
+                    // Skip malformed lines
+                }
+            }
+        } catch (IOException e) {
+            // File not found or read error: return empty list
+        }
+        return accounts;
     }
-    
+
     /**
-     * Save bank accounts to file
-     * TODO: Implement account saving
-     * @param accounts list of accounts to save
-     * @param filename the file to save to
-     * @return true if successful, false otherwise
+     * Save bank accounts to file (accounts.txt)
+     * Each BankAccount is serialized as: accountId|accountName|balance
+     * Returns true if successful.
      */
     public boolean saveAccounts(List<BankAccount> accounts, String filename) {
-        // TODO: Implement account saving
-        return false;
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + filename))) {
+            for (BankAccount acc : accounts) {
+                String line = String.join("|", acc.getAccountId(), acc.getAccountName(), acc.getBalance().toString());
+                bw.write(line);
+                bw.newLine();
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
-    
+
     /**
-     * Create backup of all data files
-     * TODO: Implement backup functionality
-     * @return true if successful, false otherwise
+     * Load receipts from file (receipts.txt)
+     * Each line: receiptId|expenseCode|filePath|timestamp
+     * Returns a list of Receipt objects.
+     */
+    public List<Receipt> loadReceipts(String filename) {
+        List<Receipt> receipts = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length != 4) continue;
+                try {
+                    String receiptId = parts[0];
+                    String expenseCode = parts[1];
+                    String filePath = parts[2];
+                    String timestamp = parts[3];
+                    receipts.add(new Receipt(receiptId, expenseCode, filePath, timestamp));
+                } catch (Exception e) {
+                    // Skip malformed lines
+                }
+            }
+        } catch (IOException e) {
+            // File not found or read error: return empty list
+        }
+        return receipts;
+    }
+
+    /**
+     * Save receipts to file (receipts.txt)
+     * Each Receipt is serialized as: receiptId|expenseCode|filePath|timestamp
+     * Returns true if successful.
+     */
+    public boolean saveReceipts(List<Receipt> receipts, String filename) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + filename))) {
+            for (Receipt r : receipts) {
+                String line = String.join("|", r.getReceiptId(), r.getExpenseCode(), r.getFilePath(), r.getTimestamp());
+                bw.write(line);
+                bw.newLine();
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Create backup of all data files (simple copy to backup directory)
+     * Returns true if all files backed up successfully.
      */
     public boolean createBackup() {
-        // TODO: Implement backup creation
-        return false;
+        String[] files = {"expenditures.txt", "categories.txt", "accounts.txt", "receipts.txt"};
+        boolean allSuccess = true;
+        for (String file : files) {
+            File src = new File(dataDir + file);
+            File dest = new File(backupDir + file + ".bak");
+            try (InputStream in = new FileInputStream(src); OutputStream out = new FileOutputStream(dest)) {
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            } catch (IOException e) {
+                allSuccess = false;
+            }
+        }
+        return allSuccess;
     }
-    
+
     /**
-     * Restore from backup
-     * TODO: Implement restore functionality
-     * @return true if successful, false otherwise
+     * Restore all data files from backup
+     * Returns true if all files restored successfully.
      */
     public boolean restoreFromBackup() {
-        // TODO: Implement restore functionality
-        return false;
+        String[] files = {"expenditures.txt", "categories.txt", "accounts.txt", "receipts.txt"};
+        boolean allSuccess = true;
+        for (String file : files) {
+            File src = new File(backupDir + file + ".bak");
+            File dest = new File(dataDir + file);
+            try (InputStream in = new FileInputStream(src); OutputStream out = new FileOutputStream(dest)) {
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            } catch (IOException e) {
+                allSuccess = false;
+            }
+        }
+        return allSuccess;
     }
-    
-    // TODO: Add more methods as needed
 }

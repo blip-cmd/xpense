@@ -17,7 +17,7 @@ java -cp . app.Main
 You should see: "Welcome to Xpense - Nkwa Financial Tracker CLI"
 
 ### 3. Check Your Assignment
-- Open `MODULE_ASSIGNMENTS.md` 
+- Open `MODULE_ASSIGNMENTS.md`
 - Find your name and assigned modules
 - Read your specific requirements
 
