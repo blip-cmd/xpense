@@ -4,7 +4,6 @@ package app.modules;
 
 /**
  * Represents a category for organizing expenditures
- * TODO: Implement the complete Category class
  */
 public class Category {
     // done
@@ -78,7 +77,7 @@ public class Category {
     public void setId(String id) {
         this.id = id;
     }
-    
+
 
     public void setName(String name) {
         this.name = name;
