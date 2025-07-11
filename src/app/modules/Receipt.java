@@ -1,75 +1,78 @@
-package app.modules;
+import java.io.*;
+import app.util.*;
 
-import java.time.LocalDateTime;
-
-/**
- * Represents a receipt in the system
- * TODO: Implement the complete Receipt class
- */
 public class Receipt {
-    // TODO: Add fields for receipt data
-    // private String receiptId;
-    // private String expenseCode;
-    // private String filePath;
-    // private LocalDateTime timestamp;
-    
-    /**
-     * Constructor for Receipt
-     * TODO: Implement constructor with proper parameters
-     */
-    public Receipt() {
-        // TODO: Initialize receipt fields
+    private SimpleQueue<String> receiptTextQueue = new SimpleQueue<>();
+    private SimpleStack<Expenditure> reviewStack = new SimpleStack<>();
+
+    public static final String RECEIPT_FILE = "receipts.txt";
+
+    public void enqueueReceipt(Expenditure e, String formattedReceipt) {
+        if (e.getReceiptInfo() == null || e.getReceiptInfo().isEmpty()) {
+            System.out.println("No receipt attached to expenditure");
+            return;
+        }
+        receiptTextQueue.offer(formattedReceipt);
+        reviewStack.push(e);
+        System.out.println("Receipt enqueued for saving: " + e.getCode());
     }
-    
-    /**
-     * Get receipt ID
-     * TODO: Implement ID retrieval
-     * @return receipt ID
-     */
-    public String getReceiptId() {
-        // TODO: Return actual receipt ID
-        return "";
+
+    public void processNextReceipt() {
+        if (receiptTextQueue.isEmpty()) {
+            System.out.println("No receipts pending.");
+            return;
+        }
+        String receipt = receiptTextQueue.poll();
+        System.out.println("Reviewing receipt:\n" + receipt);
     }
-    
-    /**
-     * Get expense code
-     * TODO: Implement expense code retrieval
-     * @return expense code
-     */
-    public String getExpenseCode() {
-        // TODO: Return actual expense code
-        return "";
+
+    public void reviewHistory() {
+        if (reviewStack.isEmpty()) {
+            System.out.println("No reviewed receipts.");
+            return;
+        }
+        System.out.println("Reviewed Receipts:");
+        Object[] arr = reviewStack.toArray();
+        for (Object o : arr) {
+            Expenditure e = (Expenditure) o;
+            System.out.println(" - " + e.getCode() + ": " + e.getReceiptInfo());
+        }
     }
-    
-    /**
-     * Get file path
-     * TODO: Implement file path retrieval
-     * @return file path
-     */
-    public String getFilePath() {
-        // TODO: Return actual file path
-        return "";
+
+    public boolean hasPending() {
+        return !receiptTextQueue.isEmpty();
     }
-    
-    /**
-     * Get timestamp
-     * TODO: Implement timestamp retrieval
-     * @return timestamp
-     */
-    public LocalDateTime getTimestamp() {
-        // TODO: Return actual timestamp
-        return LocalDateTime.now();
+
+    public void clear() {
+        receiptTextQueue.clear();
+        reviewStack.clear();
     }
-    
-    /**
-     * Validate receipt data
-     * TODO: Implement validation logic
-     * @return true if valid, false otherwise
-     */
-    public boolean isValid() {
-        // TODO: Implement validation
-        return false;
+
+    public void saveReviewLog(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
+            while (!receiptTextQueue.isEmpty()) {
+                writer.println(receiptTextQueue.poll());
+            }
+            System.out.println("Full receipt(s) saved.");
+        } catch (IOException ex) {
+            System.out.println("Could not save receipt log.");
+        }
     }
-    
-    // TODO: Add more methods as needed
+
+    public void loadReviewLog(String filename) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",", 2);
+                if (parts.length == 2) {
+                    Expenditure e = new Expenditure(parts[0], null, 0, null, null, null, null, parts[1]);
+                    reviewStack.push(e);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            // No receipt history found. Starting fresh.
+        } catch (IOException ex) {
+            System.out.println("Error loading receipt history.");
+        }
+    }
 }
