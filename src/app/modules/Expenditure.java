@@ -5,10 +5,8 @@ import java.time.LocalDateTime;
 
 /**
  * Represents an expenditure/expense in the system
- * TODO: Implement the complete Expenditure class
  */
 public class Expenditure {
-    // TODO: Add fields for expenditure data
     private String id;
     private String description;
     private BigDecimal amount;
@@ -18,7 +16,7 @@ public class Expenditure {
     
     /**
      * Constructor for Expenditure
-     * TODO: Implement constructor with proper parameters
+
      */
     public Expenditure(String id, String description, BigDecimal amount, Category category,
                        LocalDateTime dateTime, String location) {
@@ -32,31 +30,26 @@ public class Expenditure {
     
     /**
      * Get expenditure ID
-     * TODO: Implement ID retrieval
      * @return expenditure ID
      */
     public String getId() {
-        // TODO: Return actual ID
         return id;
     }
     
     /**
-     * Get expenditure amount
-     * TODO: Implement amount retrieval
+   
      * @return expenditure amount
      */
     public BigDecimal getAmount() {
-        // TODO: Return actual amount
+        // Done
         return amount;
     }
     
     /**
      * Get expenditure description
-     * TODO: Implement description retrieval
      * @return expenditure description
      */
     public String getDescription() {
-        // TODO: Return actual description
         return description;
     }
 
@@ -74,11 +67,9 @@ public class Expenditure {
     }
     /**
      * Validate expenditure data
-     * TODO: Implement validation logic
      * @return true if valid, false otherwise
      */
     public boolean isValid() {
-        // TODO: Implement validation
 
         return id != null && !id.isBlank()
             && description != null && !description.isBlank()
@@ -112,30 +103,16 @@ public class Expenditure {
         this.location = location;
     }
 
-    @Override
-    public String toString() {
-        return "Expenditure{" +
-                "id='" + id + '\'' +
-                ", description='" + description + '\'' +
-                ", amount=" + amount +
-                ", category=" + (category != null ? category.getName() : "null") +
-                ", dateTime=" + dateTime +
-                ", location='" + location + '\'' +
-                '}';
-    }
+ 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Expenditure that = (Expenditure) o;
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+    
+    // Add more methods
+    public String get_summary() {
+        return String.format("Expenditure ID: %s, Description: %s, Amount: %s, Category: %s, Date: %s, Location: %s",
+                id, description, amount.toString(), (category != null ? category.getName() : "N/A"),
+                dateTime.toString(), location);
     }
     
-    // TODO: Add more methods as needed
+
+
 }

@@ -32,7 +32,6 @@ public class Category {
      * @return category ID
      */
     public String getId() {
-        
         return id;
     }
     
@@ -57,7 +56,6 @@ public class Category {
 
     /**
      * Get category name
-   
      * @return category name
      */
     public String getColor() {
