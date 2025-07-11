@@ -139,13 +139,23 @@ public class FileManager {
         try (BufferedReader br = new BufferedReader(new FileReader(dataDir + filename))) {
             String line;
             while ((line = br.readLine()) != null) {
+                // Skip comment lines
+                if (line.startsWith("#") || line.trim().isEmpty()) continue;
+                
                 String[] parts = line.split("\\|");
                 if (parts.length != 3) continue;
                 try {
                     String id = parts[0];
                     String name = parts[1];
                     BigDecimal balance = new BigDecimal(parts[2]);
-                    accounts.add(new BankAccount(id, name, balance));
+                    
+                    // Create account with proper constructor (id, name)
+                    BankAccount account = new BankAccount(id, name);
+                    // Set balance after creation
+                    if (balance.compareTo(BigDecimal.ZERO) > 0) {
+                        account.credit(balance);
+                    }
+                    accounts.add(account);
                 } catch (Exception e) {
                     // Skip malformed lines
                 }
@@ -164,7 +174,10 @@ public class FileManager {
     public boolean saveAccounts(List<BankAccount> accounts, String filename) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + filename))) {
             for (BankAccount acc : accounts) {
-                String line = String.join("|", acc.getAccountId(), acc.getAccountName(), acc.getBalance().toString());
+                String line = String.join("|", 
+                    acc.getAccountNumber(), 
+                    acc.getAccountName(), 
+                    acc.getBalance().toString());
                 bw.write(line);
                 bw.newLine();
             }
