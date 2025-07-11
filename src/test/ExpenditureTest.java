@@ -1,6 +1,8 @@
-// package app.modules;
+package test;
 
-import java.util.List;
+// import java.util.List;
+import app.modules.Category;
+import app.modules.Expenditure;
 
 /**
  * Simple test class for Expenditure functionality
@@ -14,8 +16,20 @@ public class ExpenditureTest {
      */
     public static void testExpenditureCreation() {
         System.out.println("Testing expenditure creation...");
-        // TODO: Add test logic
-        System.out.println("Test not implemented yet");
+        // Create a sample Category
+        Category cat = new Category("1", "Food", "Food and groceries", "red");
+        // Create a sample Expenditure
+        Expenditure exp = new Expenditure("exp1", "Lunch", new java.math.BigDecimal("12.50"), cat, java.time.LocalDateTime.now(), "Accra");
+        boolean passed = exp.getId().equals("exp1") &&
+                         exp.getDescription().equals("Lunch") &&
+                         exp.getAmount().compareTo(new java.math.BigDecimal("12.50")) == 0 &&
+                         exp.getCategory() == cat &&
+                         exp.getLocation().equals("Accra");
+        if (passed) {
+            System.out.println("Expenditure creation test PASSED");
+        } else {
+            System.out.println("Expenditure creation test FAILED");
+        }
     }
     
     /**
@@ -24,8 +38,15 @@ public class ExpenditureTest {
      */
     public static void testExpenditureValidation() {
         System.out.println("Testing expenditure validation...");
-        // TODO: Add test logic
-        System.out.println("Test not implemented yet");
+        Category cat = new Category("2", "Transport", "Transport fares", "blue");
+        Expenditure validExp = new Expenditure("exp2", "Taxi", new java.math.BigDecimal("20.00"), cat, java.time.LocalDateTime.now(), "Kumasi");
+        Expenditure invalidExp = new Expenditure("", "", new java.math.BigDecimal("-5.00"), null, null, "");
+        boolean passed = validExp.isValid() && !invalidExp.isValid();
+        if (passed) {
+            System.out.println("Expenditure validation test PASSED");
+        } else {
+            System.out.println("Expenditure validation test FAILED");
+        }
     }
     
     /**
