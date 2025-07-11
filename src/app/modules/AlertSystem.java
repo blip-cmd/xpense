@@ -1,69 +1,97 @@
 package app.modules;
 
-import java.util.Queue;
-import java.util.LinkedList;
+import app.util.MinHeap;
 
 /**
- * Manages system alerts and notifications
- * TODO: Implement the complete AlertSystem class
+ * Manages system alerts and notifications WITHOUT using built‑in data‑structure classes.
+ * Implements an internal binary min‑heap where lower priority numbers come out first.
+ *
+ * Big‑O  (n = number of alerts in the heap)
+ * ─────────────────────────────────────────
+ * insert / addAlert     :  O(log n)
+ * removeMin / getNext   :  O(log n)
+ * peek                  :  O(1)
+ * displayAllAlerts      :  O(n log n)   (because we repeatedly removeMin)
  */
 public class AlertSystem {
-    // TODO: Add fields for alert management
-    // private Queue<Alert> alertQueue;
-    // private double lowBalanceThreshold;
-    // private double spendingLimitThreshold;
-    
-    /**
-     * Constructor for AlertSystem
-     * TODO: Implement constructor with proper initialization
-     */
-    public AlertSystem() {
-        // TODO: Initialize alert system
+
+    /* ‑‑‑‑‑‑ Nested Alert class ‑‑‑‑‑‑ */
+    private static class Alert {
+        String message;
+        int priority; // lower value = higher priority (e.g., 1 is urgent)
+
+        Alert(String message, int priority) {
+            this.message  = message;
+            this.priority = priority;
+        }
     }
-    
-    /**
-     * Check for low funds alert
-     * TODO: Implement low funds checking
-     * @param accountId the account to check
-     * @param currentBalance the current balance
-     * @return true if alert should be triggered
-     */
-    public boolean checkLowFunds(String accountId, double currentBalance) {
-        // TODO: Implement low funds check
-        return false;
+
+    /* ‑‑‑‑‑‑ Min‑Heap implementation ‑‑‑‑‑‑ */
+    private final MinHeap<Alert> heap;
+
+    /* thresholds governed by business rules */
+    private final double lowBalanceThreshold;
+    private final double spendingLimitThreshold;
+
+    /* ---------- Constructor ---------- */
+    public AlertSystem(double lowBalanceThreshold,
+                       double spendingLimitThreshold) {
+        this.lowBalanceThreshold    = lowBalanceThreshold;
+        this.spendingLimitThreshold = spendingLimitThreshold;
+        this.heap = new MinHeap<>(new MinHeap.PriorityComparator<Alert>() {
+            public int compare(Alert a, Alert b) {
+                return a.priority - b.priority;
+            }
+        });
     }
-    
-    /**
-     * Add alert to queue
-     * TODO: Implement alert queuing
-     * @param message the alert message
-     * @param priority the alert priority
-     */
+
+    /* ---------- Public API ---------- */
+
+    /** O(log n) insertion */
     public void addAlert(String message, int priority) {
-        // TODO: Implement alert addition
+        heap.insert(new Alert(message, priority));
     }
-    
-    /**
-     * Get next alert from queue
-     * TODO: Implement alert retrieval
-     * @return next alert message or null if empty
-     */
+
+    /** O(log n) removal; returns null if empty */
     public String getNextAlert() {
-        // TODO: Implement alert retrieval
-        return null;
+        Alert alert = heap.removeMin();
+        return alert == null ? null : alert.message;
     }
-    
-    /**
-     * Check spending limits
-     * TODO: Implement spending limit checking
-     * @param categorySpending current spending in category
-     * @param limit the spending limit
-     * @return true if limit exceeded
-     */
-    public boolean checkSpendingLimit(double categorySpending, double limit) {
-        // TODO: Implement spending limit check
+
+    /** O(1) peek without removal */
+    public boolean hasAlerts() {
+        return !heap.isEmpty();
+    }
+
+    /** O(log n) check & insert low‑balance alert */
+    public boolean checkLowFunds(String accountId, double currentBalance) {
+        if (currentBalance < lowBalanceThreshold) {
+            addAlert("Account " + accountId + " is low on funds: ₵" + currentBalance, 1);
+            return true;
+        }
         return false;
     }
-    
-    // TODO: Add more methods as needed
+
+    /** O(log n) check & insert overspend alert */
+    public boolean checkSpendingLimit(double categorySpending, Double limit) {
+        double effectiveLimit = (limit != null) ? limit : spendingLimitThreshold;
+        if (categorySpending > effectiveLimit) {
+            addAlert("Spending limit exceeded — ₵" +
+                     categorySpending + " > ₵" + effectiveLimit, 2);
+            return true;
+        }
+        return false;
+    }
+
+    /** O(n log n) prints & drains alerts one by one */
+    public void displayAllAlerts() {
+        if (!hasAlerts()) {
+            System.out.println("[✔] No active alerts.");
+            return;
+        }
+        System.out.println("=== ALERTS ===");
+        while (hasAlerts()) {
+            System.out.println("• " + getNextAlert());
+        }
+    }
 }
