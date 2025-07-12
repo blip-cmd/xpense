@@ -7,6 +7,7 @@ import java.util.PriorityQueue;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.math.BigDecimal;
 
 /**
  * Provides financial analytics and reporting functionality
@@ -56,7 +57,8 @@ public class AnalyticsModule {
 		Map<String, Double> categoryTotals = new TreeMap<>();
 		for (Expenditure e : expenditures) {
 			total += e.getAmount().doubleValue();
-			categoryTotals.put(e.getCategory(), categoryTotals.getOrDefault(e.getCategory(), 0.0) + e.getAmount());
+			String categoryName = e.getCategory().getName();
+			categoryTotals.put(categoryName, categoryTotals.getOrDefault(categoryName, 0.0) + e.getAmount().doubleValue());
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("Total Expenditure: ").append(String.format("%.2f", total)).append("\n");
@@ -99,7 +101,7 @@ public class AnalyticsModule {
 		Map<String, Double> monthTotals = new TreeMap<>();
 		for (Expenditure e : expenditures) {
 			String month = e.getMonth(); // Assumes Expenditure has getMonth() returning "YYYY-MM"
-			monthTotals.put(month, monthTotals.getOrDefault(month, 0.0) + e.getAmount());
+			monthTotals.put(month, monthTotals.getOrDefault(month, 0.0) + e.getAmount().doubleValue());
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("Monthly Spending Trends:\n");
@@ -121,7 +123,7 @@ public class AnalyticsModule {
 		if (expenditures == null || expenditures.isEmpty() || topN <= 0) return new ArrayList<>();
 		Map<String, Double> categoryTotals = new TreeMap<>();
 		for (Expenditure e : expenditures) {
-			categoryTotals.put(e.getCategory(), categoryTotals.getOrDefault(e.getCategory(), 0.0) + e.getAmount());
+			categoryTotals.put(e.getCategory().getName(), categoryTotals.getOrDefault(e.getCategory().getName(), 0.0) + e.getAmount().doubleValue());
 		}
 		List<Map.Entry<String, Double>> sorted = new ArrayList<>(categoryTotals.entrySet());
 		sorted.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
@@ -130,6 +132,41 @@ public class AnalyticsModule {
 			result.add(sorted.get(i).getKey());
 		}
 		return result;
+	}
+
+	/**
+	 * Generate affordability insights based on expenditures and available balance
+	 * @param expenditures list of expenditures
+	 * @param totalBalance total available balance
+	 * @return affordability insights string
+	 */
+	public String generateAffordabilityInsights(List<Expenditure> expenditures, BigDecimal totalBalance) {
+		if (expenditures == null || expenditures.isEmpty()) {
+			return "No expenditures data available for affordability analysis.";
+		}
+		
+		double monthlyExpenses = calculateMonthlyBurn(expenditures);
+		double monthlyIncome = totalBalance.doubleValue(); // Simplified assumption
+		
+		return getAffordabilityInsights(monthlyIncome, monthlyExpenses);
+	}
+
+	/**
+	 * Generate category breakdown report
+	 * @param expenditures list of expenditures
+	 * @return category breakdown string
+	 */
+	public String generateCategoryBreakdown(List<Expenditure> expenditures) {
+		return generateCostAnalysis(expenditures);
+	}
+
+	/**
+	 * Generate spending trends report
+	 * @param expenditures list of expenditures
+	 * @return spending trends string
+	 */
+	public String generateSpendingTrends(List<Expenditure> expenditures) {
+		return getSpendingTrends(expenditures);
 	}
 
 	// Helper method to count distinct months in expenditures

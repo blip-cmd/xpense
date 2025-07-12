@@ -1,5 +1,6 @@
 package app.util;
 
+@SuppressWarnings("unchecked")
 public class SimpleQueue<T> {
     private static final int CAPACITY = 512;
     private Object[] elements = new Object[CAPACITY];

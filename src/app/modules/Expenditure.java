@@ -13,10 +13,12 @@ public class Expenditure {
     private Category category;
     private LocalDateTime dateTime;
     private String location;
+    private String phase;
+    private String bankAccountId;
+    private String receiptInfo;
     
     /**
      * Constructor for Expenditure
-
      */
     public Expenditure(String id, String description, BigDecimal amount, Category category,
                        LocalDateTime dateTime, String location) {
@@ -26,6 +28,25 @@ public class Expenditure {
         this.category = category;
         this.dateTime = dateTime;
         this.location = location;
+        this.phase = "active"; // default phase
+        this.bankAccountId = null;
+        this.receiptInfo = null;
+    }
+    
+    /**
+     * Constructor with all fields
+     */
+    public Expenditure(String id, String description, BigDecimal amount, Category category,
+                       LocalDateTime dateTime, String location, String phase, String bankAccountId) {
+        this.id = id;
+        this.description = description;
+        this.amount = amount;
+        this.category = category;
+        this.dateTime = dateTime;
+        this.location = location;
+        this.phase = phase;
+        this.bankAccountId = bankAccountId;
+        this.receiptInfo = null;
     }
     
     /**
@@ -34,6 +55,55 @@ public class Expenditure {
      */
     public String getId() {
         return id;
+    }
+    
+    /**
+     * Get expenditure code (alias for getId for compatibility)
+     * @return expenditure code
+     */
+    public String getCode() {
+        return id;
+    }
+    
+    /**
+     * Get expenditure date (alias for getDateTime for compatibility)
+     * @return expenditure date
+     */
+    public LocalDateTime getDate() {
+        return dateTime;
+    }
+    
+    /**
+     * Get expenditure month in YYYY-MM format
+     * @return month string
+     */
+    public String getMonth() {
+        if (dateTime == null) return "1970-01";
+        return String.format("%04d-%02d", dateTime.getYear(), dateTime.getMonthValue());
+    }
+    
+    /**
+     * Get expenditure phase
+     * @return phase
+     */
+    public String getPhase() {
+        return phase;
+    }
+    
+    /**
+     * Get bank account ID
+     * @return bank account ID
+     */
+    public String getBankAccountId() {
+        return bankAccountId;
+    }
+    
+    /**
+     * Get receipt info
+     * @return receipt info
+     */
+    public String getReceiptInfo() {
+        return receiptInfo;
     }
     
     /**
@@ -102,6 +172,18 @@ public class Expenditure {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setPhase(String phase) {
+        this.phase = phase;
+    }
+
+    public void setBankAccountId(String bankAccountId) {
+        this.bankAccountId = bankAccountId;
+    }
+
+    public void setReceiptInfo(String receiptInfo) {
+        this.receiptInfo = receiptInfo;
     }
 
  

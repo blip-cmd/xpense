@@ -1,6 +1,7 @@
 package app.util;
 
 // Simple MinHeap for objects with a priority field
+@SuppressWarnings("unchecked")
 public class MinHeap<T> {
     private Object[] heap;
     private int size;

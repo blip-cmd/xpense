@@ -41,14 +41,18 @@ public class FileManager {
                 String[] parts = line.split("\\|");
                 if (parts.length != 6) continue; // skip invalid lines
                 try {
-                    // Parse fields (assumes Expenditure constructor: code, amount, date, phase, category, accountId)
+                    // Parse fields
                     String code = parts[0];
-                    BigDecimal amount = new BigDecimal(parts[1]);
-                    LocalDate date = LocalDate.parse(parts[2]);
-                    String phase = parts[3];
-                    String category = parts[4];
-                    String accountId = parts[5];
-                    expenditures.add(new Expenditure(code, amount, date, phase, category, accountId));
+                    String description = parts[1];
+                    BigDecimal amount = new BigDecimal(parts[2]);
+                    // Create a default category for now
+                    Category category = new Category("DEFAULT", parts[4], "Default category", "blue");
+                    LocalDateTime dateTime = LocalDateTime.parse(parts[3]);
+                    String location = "Unknown";
+                    
+                    Expenditure exp = new Expenditure(code, description, amount, category, dateTime, location);
+                    exp.setBankAccountId(parts[5]);
+                    expenditures.add(exp);
                 } catch (Exception e) {
                     // Skip malformed lines
                 }
@@ -61,20 +65,19 @@ public class FileManager {
 
     /**
      * Save expenditures to file (expenditures.txt)
-     * Each Expenditure is serialized as: code|amount|date|phase|category|accountId
+     * Each Expenditure is serialized as: code|description|amount|dateTime|category|bankAccountId
      * Returns true if successful.
      */
     public boolean saveExpenditures(List<Expenditure> expenditures, String filename) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + filename))) {
             for (Expenditure exp : expenditures) {
-                // Assumes Expenditure has appropriate getters
                 String line = String.join("|",
                         exp.getCode(),
+                        exp.getDescription(),
                         exp.getAmount().toString(),
-                        exp.getDate().toString(),
-                        exp.getPhase(),
-                        exp.getCategory(),
-                        exp.getBankAccountId()
+                        exp.getDateTime().toString(),
+                        exp.getCategory().getName(),
+                        exp.getBankAccountId() != null ? exp.getBankAccountId() : ""
                 );
                 bw.write(line);
                 bw.newLine();
@@ -101,7 +104,7 @@ public class FileManager {
                     String name = parts[0];
                     String description = parts[1];
                     String color = parts[2];
-                    categories.add(new Category(name, description, color));
+                    categories.add(new Category("CAT" + System.currentTimeMillis(), name, description, color));
                 } catch (Exception e) {
                     // Skip malformed lines
                 }
@@ -166,6 +169,13 @@ public class FileManager {
         }
         return accounts;
     }
+    
+    /**
+     * Load bank accounts from file (alias for loadAccounts for compatibility)
+     */
+    public List<BankAccount> loadBankAccounts(String filename) {
+        return loadAccounts(filename);
+    }
 
     /**
      * Save bank accounts to file (accounts.txt)
@@ -204,7 +214,8 @@ public class FileManager {
                     String receiptId = parts[0];
                     String expenseCode = parts[1];
                     String filePath = parts[2];
-                    String timestamp = parts[3];
+                    String timestampStr = parts[3];
+                    LocalDateTime timestamp = LocalDateTime.parse(timestampStr);
                     receipts.add(new Receipt(receiptId, expenseCode, filePath, timestamp));
                 } catch (Exception e) {
                     // Skip malformed lines
@@ -224,7 +235,7 @@ public class FileManager {
     public boolean saveReceipts(List<Receipt> receipts, String filename) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + filename))) {
             for (Receipt r : receipts) {
-                String line = String.join("|", r.getReceiptId(), r.getExpenseCode(), r.getFilePath(), r.getTimestamp());
+                String line = String.join("|", r.getReceiptId(), r.getExpenseCode(), r.getFilePath(), r.getTimestamp().toString());
                 bw.write(line);
                 bw.newLine();
             }

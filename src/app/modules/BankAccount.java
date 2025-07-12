@@ -27,6 +27,16 @@ public class BankAccount {
         this.createdDate = LocalDate.now();
     }
 
+    /**
+     * Constructor for BankAccount with initial balance.
+     */
+    public BankAccount(String accountNumber, String accountName, BigDecimal initialBalance) {
+        this.accountNumber = accountNumber;
+        this.accountName = accountName;
+        this.balance = initialBalance != null ? initialBalance : BigDecimal.ZERO;
+        this.createdDate = LocalDate.now();
+    }
+
     // Getter for account balance
     public BigDecimal getBalance() {
         return balance;
@@ -34,6 +44,11 @@ public class BankAccount {
 
     // Getter for account number
     public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    // Getter for account ID (alias for getAccountNumber for compatibility)
+    public String getAccountId() {
         return accountNumber;
     }
 

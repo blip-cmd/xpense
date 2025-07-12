@@ -7,7 +7,8 @@ import app.modules.Category;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Main {
+public class Main { 
+
     public static void main(String[] args) {
         AlertSystem alertSystem = new AlertSystem(100.0, 5000.0);
         CLIHandler cli = new CLIHandler(alertSystem);
@@ -29,3 +30,4 @@ public class Main {
         cli.displayMenu();
     }
 }
+

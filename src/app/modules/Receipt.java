@@ -1,80 +1,74 @@
 package app.modules;
 
-import java.io.*;
-import app.util.*;
+import java.time.LocalDateTime;
 
+/**
+ * Represents a receipt linked to an expenditure
+ */
 public class Receipt {
-    private SimpleQueue<String> receiptTextQueue = new SimpleQueue<>();
-    private SimpleStack<Expenditure> reviewStack = new SimpleStack<>();
-
-    public static final String RECEIPT_FILE = "receipts.txt";
-
-    public void enqueueReceipt(Expenditure e, String formattedReceipt) {
-        if (e.getReceiptInfo() == null || e.getReceiptInfo().isEmpty()) {
-            System.out.println("No receipt attached to expenditure");
-            return;
-        }
-        receiptTextQueue.offer(formattedReceipt);
-        reviewStack.push(e);
-        System.out.println("Receipt enqueued for saving: " + e.getCode());
+    private String receiptId;
+    private String expenseCode;
+    private String filePath;
+    private LocalDateTime timestamp;
+    
+    /**
+     * Default constructor
+     */
+    public Receipt() {
+        this.timestamp = LocalDateTime.now();
     }
-
-    public void processNextReceipt() {
-        if (receiptTextQueue.isEmpty()) {
-            System.out.println("No receipts pending.");
-            return;
-        }
-        String receipt = receiptTextQueue.poll();
-        System.out.println("Reviewing receipt:\n" + receipt);
+    
+    /**
+     * Constructor with all fields
+     */
+    public Receipt(String receiptId, String expenseCode, String filePath, LocalDateTime timestamp) {
+        this.receiptId = receiptId;
+        this.expenseCode = expenseCode;
+        this.filePath = filePath;
+        this.timestamp = timestamp != null ? timestamp : LocalDateTime.now();
     }
-
-    public void reviewHistory() {
-        if (reviewStack.isEmpty()) {
-            System.out.println("No reviewed receipts.");
-            return;
-        }
-        System.out.println("Reviewed Receipts:");
-        Object[] arr = reviewStack.toArray();
-        for (Object o : arr) {
-            Expenditure e = (Expenditure) o;
-            System.out.println(" - " + e.getCode() + ": " + e.getReceiptInfo());
-        }
+    
+    // Getters
+    public String getReceiptId() {
+        return receiptId;
     }
-
-    public boolean hasPending() {
-        return !receiptTextQueue.isEmpty();
+    
+    public String getExpenseCode() {
+        return expenseCode;
     }
-
-    public void clear() {
-        receiptTextQueue.clear();
-        reviewStack.clear();
+    
+    public String getFilePath() {
+        return filePath;
     }
-
-    public void saveReviewLog(String filename) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
-            while (!receiptTextQueue.isEmpty()) {
-                writer.println(receiptTextQueue.poll());
-            }
-            System.out.println("Full receipt(s) saved.");
-        } catch (IOException ex) {
-            System.out.println("Could not save receipt log.");
-        }
+    
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
-
-    public void loadReviewLog(String filename) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",", 2);
-                if (parts.length == 2) {
-                    Expenditure e = new Expenditure(parts[0], null, 0, null, null, null, null, parts[1]);
-                    reviewStack.push(e);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            // No receipt history found. Starting fresh.
-        } catch (IOException ex) {
-            System.out.println("Error loading receipt history.");
-        }
+    
+    // Setters
+    public void setReceiptId(String receiptId) {
+        this.receiptId = receiptId;
+    }
+    
+    public void setExpenseCode(String expenseCode) {
+        this.expenseCode = expenseCode;
+    }
+    
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+    
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+    
+    @Override
+    public String toString() {
+        return "Receipt{" +
+                "receiptId='" + receiptId + '\'' +
+                ", expenseCode='" + expenseCode + '\'' +
+                ", filePath='" + filePath + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }
