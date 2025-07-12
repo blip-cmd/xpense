@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Provides financial analytics and reporting functionality
