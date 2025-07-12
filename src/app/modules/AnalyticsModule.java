@@ -1,6 +1,8 @@
 package app.modules;
 
 import java.util.TreeMap;
+import java.util.Map;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.List;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class AnalyticsModule {
 		double total = 0.0;
 		Map<String, Double> categoryTotals = new TreeMap<>();
 		for (Expenditure e : expenditures) {
-			total += e.getAmount();y/
+			total += e.getAmount().doubleValue();
 			categoryTotals.put(e.getCategory(), categoryTotals.getOrDefault(e.getCategory(), 0.0) + e.getAmount());
 		}
 		StringBuilder sb = new StringBuilder();
@@ -148,3 +150,5 @@ public class AnalyticsModule {
 	}
 
 	// TODO: Add more methods as needed
+
+}
