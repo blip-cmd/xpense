@@ -50,10 +50,12 @@ public class AnalyticsModule {
 		// TODO: Implement cost analysis
 		if (expenditures == null || expenditures.isEmpty()) return "No expenditures to analyze.";
 		double total = 0.0;
+
+
 		Map<String, Double> categoryTotals = new TreeMap<>();
 		for (Expenditure e : expenditures) {
-			total += e.getAmount();y/
-			categoryTotals.put(e.getCategory(), categoryTotals.getOrDefault(e.getCategory(), 0.0) + e.getAmount());
+			total += e.getAmount().doubleValue();
+			categoryTotals.put(e.getCategory(), categoryTotals.getOrDefault(e.getCategory(), 0.0) + e.getAmount().doubleValue());	
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("Total Expenditure: ").append(String.format("%.2f", total)).append("\n");
@@ -148,3 +150,4 @@ public class AnalyticsModule {
 	}
 
 	// TODO: Add more methods as needed
+}
