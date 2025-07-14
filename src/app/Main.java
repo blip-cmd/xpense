@@ -4,13 +4,14 @@ import app.modules.AlertSystem;
 import app.modules.CLIHandler;
 import app.modules.Expenditure;
 import app.modules.Category;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Main { 
 
     public static void main(String[] args) {
-        AlertSystem alertSystem = new AlertSystem(100.0, 5000.0);
+        AlertSystem alertSystem = new AlertSystem(100.0, 5000.0); //Paddy
         CLIHandler cli = new CLIHandler(alertSystem);
         
         // Create a proper category first

@@ -1,3 +1,5 @@
+package app;
+
 import app.modules.AlertSystem;
 import app.modules.CLIHandler;
 import app.modules.Expenditure;
@@ -5,7 +7,6 @@ import app.modules.Category;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-package app;
 
 public class MainTest {
     public static void main(String[] args) {

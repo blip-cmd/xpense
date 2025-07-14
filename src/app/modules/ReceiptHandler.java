@@ -1,8 +1,8 @@
 package app.modules;
 
-import java.io.*;
-import java.util.*;
-import app.util.*;
+import java.io.*;  // please limit to only the classes used
+import java.util.*;  // please limit to only the classes used
+import app.util.*;  // please limit to only the classes used
 
 public class ReceiptHandler {
     private static final String RECEIPT_COUNTER_FILE = "receipts.txt";
