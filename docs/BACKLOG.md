@@ -1,5 +1,6 @@
 # Real Estate Expenditure System — Backlog (Outstanding Tasks Only)
 
+- Category.txt in two dir
 
 ### UI/UX Improvements
 - Category colors
