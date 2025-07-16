@@ -1,0 +1,3 @@
+ACC001|Main Operations|5000.00
+ACC002|Marketing|2500.00
+ACC003|Sales|1000.00

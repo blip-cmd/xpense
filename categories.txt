@@ -1,0 +1,3 @@
+Cement|Building material|gray
+Printing|Marketing material|blue
+TV Adverts|Promotion|red
