@@ -43,13 +43,13 @@ public class FileManager {
                     // Parse fields
                     String code = parts[0];
                     String description = parts[1];
-                    BigDecimal amount = new BigDecimal(parts[2]);
+                    Float amount = Float.parseFloat(parts[2]);
                     // Create a default category for now
                     Category category = new Category("DEFAULT", parts[4], "Default category", "blue");
                     LocalDateTime dateTime = LocalDateTime.parse(parts[3]);
                     String location = "Unknown";
-                    
-                    Expenditure exp = new Expenditure(code, description, amount, category, dateTime, location);
+
+                    Expenditure exp = new Expenditure(code, description, amount, category, dateTime, location, null, null);
                     exp.setBankAccountId(parts[5]);
                     expenditures.add(exp);
                 } catch (Exception e) {
@@ -150,12 +150,12 @@ public class FileManager {
                 try {
                     String id = parts[0];
                     String name = parts[1];
-                    BigDecimal balance = new BigDecimal(parts[2]);
+                    Float balance = Float.parseFloat(parts[2]);
                     
                     // Create account with proper constructor (id, name)
                     BankAccount account = new BankAccount(id, name);
                     // Set balance after creation
-                    if (balance.compareTo(BigDecimal.ZERO) > 0) {
+                    if (balance > 0) {
                         account.credit(balance);
                     }
                     accounts.add(account);
@@ -184,9 +184,9 @@ public class FileManager {
     public boolean saveAccounts(List<BankAccount> accounts, String filename) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + filename))) {
             for (BankAccount acc : accounts) {
-                String line = String.join("|", 
-                    acc.getAccountNumber(), 
-                    acc.getAccountName(), 
+                String line = String.join("|",
+                    acc.getAccountNumber(),
+                    acc.getAccountName(),
                     acc.getBalance().toString());
                 bw.write(line);
                 bw.newLine();

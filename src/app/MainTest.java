@@ -29,10 +29,13 @@ public class MainTest {
         Expenditure expenditure = new Expenditure(
                 "EXP001",
                 "Test Expense",
-                new BigDecimal("50.00"),
+                new Float("50.00"),
                 category,
                 LocalDateTime.now(),
-                "Test Location");
+                "Test Location",
+                null,
+                null
+        );
         System.out.println("Expenditure created: " + (expenditure != null));
         System.out.println("Expenditure description: " + expenditure.getDescription());
 

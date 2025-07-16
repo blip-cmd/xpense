@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.List;
 import java.util.ArrayList;
-import java.math.BigDecimal;
 
 /**
  * Provides financial analytics and reporting functionality
@@ -139,7 +138,7 @@ public class AnalyticsModule {
 	 * @param totalBalance total available balance
 	 * @return affordability insights string
 	 */
-	public String generateAffordabilityInsights(List<Expenditure> expenditures, BigDecimal totalBalance) {
+	public String generateAffordabilityInsights(List<Expenditure> expenditures, Float totalBalance) {
 		if (expenditures == null || expenditures.isEmpty()) {
 			return "No expenditures data available for affordability analysis.";
 		}
@@ -184,8 +183,19 @@ public class AnalyticsModule {
 			this.category = category;
 			this.amount = amount;
 		}
+	}	
+
+
+	public void addMonthlySpending(String month, double amount) {
+		monthlySpending.put(month, monthlySpending.getOrDefault(month, 0.0) + amount);
 	}
-
-	// TODO: Add more methods as needed
-
+	public void addTopCategory(String category, double amount) {
+		topCategories.offer(new CategorySpending(category, amount));
+		if (topCategories.size() > 10) {
+			topCategories.poll(); // Keep only top 10 categories
+		}
+	}
+	public Map<String, Double> getMonthlySpending() {
+		return monthlySpending;
+	}
 }

@@ -1,9 +1,7 @@
 package app.modules;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*; // please limit to only the classes used
-
+import java.util.ArrayList;
 
 /**
  * Represents a bank account in the expenditure management system.
@@ -12,7 +10,7 @@ public class BankAccount {
     // Fields
     private String accountNumber;
     private String accountName;
-    private BigDecimal balance;
+    private float balance;
     private LocalDate createdDate;
     private ArrayList<Expenditure> expenditures = new ArrayList<>();
 
@@ -23,22 +21,22 @@ public class BankAccount {
     public BankAccount(String accountNumber, String accountName) {
         this.accountNumber = accountNumber;
         this.accountName = accountName;
-        this.balance = BigDecimal.ZERO;
+        this.balance = 0f;
         this.createdDate = LocalDate.now();
     }
 
     /**
      * Constructor for BankAccount with initial balance.
      */
-    public BankAccount(String accountNumber, String accountName, BigDecimal initialBalance) {
+    public BankAccount(String accountNumber, String accountName, Float initialBalance) {
         this.accountNumber = accountNumber;
         this.accountName = accountName;
-        this.balance = initialBalance != null ? initialBalance : BigDecimal.ZERO;
+        this.balance = initialBalance != null ? initialBalance : 0f;
         this.createdDate = LocalDate.now();
     }
 
     // Getter for account balance
-    public BigDecimal getBalance() {
+    public Float getBalance() {
         return balance;
     }
 
@@ -66,9 +64,9 @@ public class BankAccount {
         return expenditures;
     }
 
-    // Returns the current balance as a float
+    // Returns the current balance as a float (already is)
     public float get_balance() {
-        return balance.floatValue();
+        return balance;
     }
 
     // Adds an expenditure and debits the account
@@ -82,14 +80,14 @@ public class BankAccount {
      * Debit account (subtract amount).
      * Returns false if amount is invalid or insufficient funds.
      */
-    public boolean debit(BigDecimal amount) {
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+    public boolean debit(Float amount) {
+        if (amount == null || amount <= 0) {
             return false; // Invalid amount
         }
-        if (balance.compareTo(amount) < 0) {
+        if (balance < amount) {
             return false; // Not enough balance
         }
-        balance = balance.subtract(amount);
+        balance -= amount;
         return true;
     }
 
@@ -97,11 +95,11 @@ public class BankAccount {
      * Credit account (add amount).
      * Returns false if amount is invalid.
      */
-    public boolean credit(BigDecimal amount) {
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+    public boolean credit(Float amount) {
+        if (amount == null || amount <= 0) {
             return false; // Invalid amount
         }
-        balance = balance.add(amount);
+        balance += amount;
         return true;
     }
 
@@ -114,8 +112,8 @@ public class BankAccount {
         this.accountName = accountName;
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
+    public void setBalance(Float balance) {
+        this.balance = balance != null ? balance : 0f;
     }
 
     public void setCreatedDate(LocalDate createdDate) {

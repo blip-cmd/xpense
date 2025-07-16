@@ -27,7 +27,7 @@ public class CLIHandler {
     // ANSI color codes for CLI
     private static final String RESET = "\u001B[0m";
     private static final String CYAN = "\u001B[36m";
-    private static final String GREEN = "\u001B[32m";
+    // private static final String GREEN = "\u001B[32m";
     private static final String RED = "\u001B[31m";
     private static final String YELLOW = "\u001B[33m";
     private static final String BOLD = "\u001B[1m";
@@ -275,29 +275,16 @@ public class CLIHandler {
 
     private void addExpenditure() {
         try {
-            System.out.print(CYAN + "Enter expenditure ID: " + RESET);
-            String id = getUserInput();
-            if ("cancel".equalsIgnoreCase(id)) return;
-            if (id == null || id.trim().isEmpty()) {
-                System.out.println(RED + "Invalid ID. Operation cancelled." + RESET);
-                return;
-            }
-
-            System.out.print(CYAN + "Enter description: " + RESET);
-            String description = getUserInput();
-            if ("cancel".equalsIgnoreCase(description)) return;
-            if (description == null || description.trim().isEmpty()) {
-                System.out.println(RED + "Invalid description. Operation cancelled." + RESET);
-                return;
-            }
-
+            // ... existing code ...
+            
             System.out.print(CYAN + "Enter amount: " + RESET);
             String amountStr = getUserInput();
             if ("cancel".equalsIgnoreCase(amountStr)) return;
-            BigDecimal amount;
+            
+            float amount; // Changed from BigDecimal
             try {
-                amount = new BigDecimal(amountStr);
-                if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+                amount = Float.parseFloat(amountStr); // Changed from new BigDecimal()
+                if (amount <= 0) { // Changed from compareTo()
                     System.out.println(RED + "Amount must be positive. Operation cancelled." + RESET);
                     return;
                 }
@@ -305,43 +292,8 @@ public class CLIHandler {
                 System.out.println(RED + "Invalid amount format. Operation cancelled." + RESET);
                 return;
             }
-
-            System.out.print(CYAN + "Enter category name: " + RESET);
-            String categoryName = getUserInput();
-            if ("cancel".equalsIgnoreCase(categoryName)) return;
-            if (!categoryManager.validateCategory(categoryName)) {
-                System.out.println("Invalid category. Please add the category first.");
-                return;
-            }
-
-            System.out.print(CYAN + "Enter location/phase: " + RESET);
-            String phase = getUserInput();
-            if ("cancel".equalsIgnoreCase(phase)) return;
-
-            // Find the category object
-            Category category = null;
-            for (Category cat : categoryManager.getAllCategories()) {
-                if (cat.getName().equalsIgnoreCase(categoryName)) {
-                    category = cat;
-                    break;
-                }
-            }
-
-            if (category == null) {
-                System.out.println("Category not found. Operation cancelled.");
-                return;
-            }
-
-            Expenditure expenditure = new Expenditure(id, description, amount, category, LocalDateTime.now(), phase);
-
-            if (expenditureManager.addExpenditure(expenditure)) {
-                System.out.println(GREEN + "Expenditure added successfully!" + RESET);
-                // Update bank account balance (if integrated)
-                alertSystem.addAlert("New expenditure added: ₵" + amount, 3);
-            } else {
-                System.out.println(RED + "Failed to add expenditure. ID might already exist." + RESET);
-            }
-
+            
+            // ... rest of method ...
         } catch (Exception e) {
             System.out.println(RED + "Error adding expenditure: " + e.getMessage() + RESET);
         }
@@ -486,10 +438,10 @@ public class CLIHandler {
 
         System.out.print("Enter new amount (current: " + existing.getAmount() + "): ");
         String amountStr = getUserInput();
-        BigDecimal newAmount = existing.getAmount();
+        Float newAmount = existing.getAmount();
         if (amountStr != null && !amountStr.trim().isEmpty()) {
             try {
-                newAmount = new BigDecimal(amountStr);
+                newAmount = Float.parseFloat(amountStr);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid amount format. Using current amount.");
             }
@@ -501,7 +453,9 @@ public class CLIHandler {
                 newAmount,
                 existing.getCategory(),
                 existing.getDate(),
-                existing.getPhase());
+                existing.getLocation(),
+                existing.getPhase(),
+                existing.getBankAccountId());
 
         if (expenditureManager.updateExpenditure(updated)) {
             System.out.println("_/ Expenditure updated successfully!");
@@ -547,8 +501,8 @@ public class CLIHandler {
         String maxStr = getUserInput();
 
         try {
-            BigDecimal min = new BigDecimal(minStr);
-            BigDecimal max = new BigDecimal(maxStr);
+            Float min = Float.parseFloat(minStr);
+            Float max = Float.parseFloat(maxStr);
 
             List<Expenditure> filtered = expenditureManager.filterByAmount(min, max);
             if (filtered.isEmpty()) {
@@ -885,11 +839,11 @@ public class CLIHandler {
         System.out.println("─".repeat(70));
 
         for (BankAccount account : accounts) {
-            String status = account.getBalance().compareTo(new BigDecimal("100")) < 0 ? "LOW" : "OK";
+            String status = account.getBalance() < 100f ? "LOW" : "OK";
             System.out.printf("%-15s %-25s ₵%-14.2f %-15s%n",
                     account.getAccountId(),
                     truncateString(account.getAccountName(), 25),
-                    account.getBalance().doubleValue(),
+                    account.getBalance(),
                     status);
         }
     }
@@ -912,9 +866,9 @@ public class CLIHandler {
 
             System.out.print("Enter initial balance: ");
             String balanceStr = getUserInput();
-            BigDecimal balance;
+            Float balance;
             try {
-                balance = new BigDecimal(balanceStr);
+                balance = Float.parseFloat(balanceStr);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid balance format.");
                 return;
@@ -953,22 +907,22 @@ public class CLIHandler {
         System.out.println("Account Name: " + account.getAccountName());
         System.out.println("Current Balance: ₵" + account.getBalance());
         System.out.println("Account Status: "
-                + (account.getBalance().compareTo(new BigDecimal("100")) < 0 ? "LOW BALANCE" : "OK"));
+                + (account.getBalance() < 100f ? "LOW BALANCE" : "OK"));
     }
 
     private void viewAccountSummary() {
         System.out.println("\n=== ACCOUNT SUMMARY ===");
-        BigDecimal totalBalance = bankLedger.getTotalBalance();
+        Float    totalBalance = bankLedger.getTotalBalance();
         System.out.println("Total Balance Across All Accounts: ₵" + totalBalance);
         System.out.println("Number of Accounts: " + bankLedger.getAllAccounts().size());
 
         // Show accounts with low balance
         List<BankAccount> lowBalanceAccounts = new ArrayList<>();
         for (BankAccount account : bankLedger.getAllAccounts()) {
-            if (account.getBalance().compareTo(new BigDecimal("100")) < 0) {
+            if (account.getBalance() < 100f) {
                 lowBalanceAccounts.add(account);
                 // Link alert system to bank accounts for low balance
-                alertSystem.checkLowFunds(account.getAccountId(), account.getBalance().doubleValue());
+                alertSystem.checkLowFunds(account.getAccountId(), account.getBalance());
             }
         }
 
@@ -986,11 +940,11 @@ public class CLIHandler {
 
         System.out.println("\n=== LOW BALANCE CHECK ===");
         for (BankAccount account : accounts) {
-            if (account.getBalance().compareTo(new BigDecimal("100")) < 0) {
+            if (account.getBalance() < 100f) {
                 System.out.println("LOW BALANCE: " + account.getAccountName() +
                         " (ID: " + account.getAccountId() + ") - Balance: ₵" + account.getBalance());
                 // Generate alert for low balance
-                alertSystem.checkLowFunds(account.getAccountId(), account.getBalance().doubleValue());
+                alertSystem.checkLowFunds(account.getAccountId(), account.getBalance());
                 hasLowBalance = true;
             }
         }
@@ -1220,7 +1174,7 @@ public class CLIHandler {
 
     private void showAffordabilityInsights() {
         List<Expenditure> expenditures = expenditureManager.getAllExpenditures();
-        BigDecimal totalBalance = bankLedger.getTotalBalance();
+        Float totalBalance = bankLedger.getTotalBalance();
 
         String insights = analyticsModule.generateAffordabilityInsights(expenditures, totalBalance);
 
@@ -1247,8 +1201,8 @@ public class CLIHandler {
     @SuppressWarnings("deprecation")
     private void showSummaryStatistics() {
         List<Expenditure> expenditures = expenditureManager.getAllExpenditures();
-        BigDecimal totalSpent = expenditureManager.getTotalAmount();
-        BigDecimal totalBalance = bankLedger.getTotalBalance();
+        float totalSpent = expenditureManager.getTotalAmount();
+        Float totalBalance = bankLedger.getTotalBalance();
 
         // Use Unicode for Cedi: \u20B5
         System.out.println("\n=== SUMMARY STATISTICS ===");
@@ -1259,8 +1213,7 @@ public class CLIHandler {
         System.out.println("Number of Bank Accounts: " + bankLedger.getAllAccounts().size());
 
         if (!expenditures.isEmpty()) {
-            BigDecimal avgExpenditure = totalSpent.divide(new BigDecimal(expenditures.size()), 2,
-                    BigDecimal.ROUND_HALF_UP);
+            float avgExpenditure = totalSpent / expenditures.size();
             System.out.println("Average Expenditure: \u20B5" + avgExpenditure);
         }
     }

@@ -19,10 +19,10 @@ public class ExpenditureTest {
         // Create a sample Category
         Category cat = new Category("1", "Food", "Food and groceries", "red");
         // Create a sample Expenditure
-        Expenditure exp = new Expenditure("exp1", "Lunch", new java.math.BigDecimal("12.50"), cat, java.time.LocalDateTime.now(), "Accra");
+        Expenditure exp = new Expenditure("exp1", "Lunch", new Float("12.50"), cat, java.time.LocalDateTime.now(), "Accra" , null, null);
         boolean passed = exp.getId().equals("exp1") &&
                          exp.getDescription().equals("Lunch") &&
-                         exp.getAmount().compareTo(new java.math.BigDecimal("12.50")) == 0 &&
+                         exp.getAmount().compareTo(new Float("12.50")) == 0 &&
                          exp.getCategory() == cat &&
                          exp.getLocation().equals("Accra");
         if (passed) {
@@ -39,8 +39,8 @@ public class ExpenditureTest {
     public static void testExpenditureValidation() {
         System.out.println("Testing expenditure validation...");
         Category cat = new Category("2", "Transport", "Transport fares", "blue");
-        Expenditure validExp = new Expenditure("exp2", "Taxi", new java.math.BigDecimal("20.00"), cat, java.time.LocalDateTime.now(), "Kumasi");
-        Expenditure invalidExp = new Expenditure("", "", new java.math.BigDecimal("-5.00"), null, null, "");
+        Expenditure validExp = new Expenditure("exp2", "Taxi", new Float("20.00"), cat, java.time.LocalDateTime.now(), "Kumasi", null, null);
+        Expenditure invalidExp = new Expenditure("", "", new Float("-5.00"), null, null, "", null, null);
         boolean passed = validExp.isValid() && !invalidExp.isValid();
         if (passed) {
             System.out.println("Expenditure validation test PASSED");

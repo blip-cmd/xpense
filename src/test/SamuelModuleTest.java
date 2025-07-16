@@ -1,7 +1,9 @@
 package test;
 
 import app.modules.*;
-import java.math.BigDecimal;
+import app.modules.BankLedger;
+import app.modules.ExpenditureManager;
+import app.modules.Category;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,21 +34,21 @@ public class SamuelModuleTest {
         
         // Test 1: Create accounts
         System.out.println("Test 1: Creating accounts...");
-        boolean result1 = ledger.createAccount("ACC001", "Main Checking", new BigDecimal("1000.00"));
-        boolean result2 = ledger.createAccount("ACC002", "Savings Account", new BigDecimal("5000.00"));
+        boolean result1 = ledger.createAccount("ACC001", "Main Checking", new Float("1000.00"));
+        boolean result2 = ledger.createAccount("ACC002", "Savings Account", new Float("5000.00"));
         System.out.println("Account creation results: " + result1 + ", " + result2);
         
         // Test 2: Check balances
         System.out.println("\nTest 2: Checking balances...");
-        double balance1 = ledger.getBalance("ACC001");
-        double balance2 = ledger.getBalance("ACC002");
+        float balance1 = ledger.getBalance("ACC001");
+        float balance2 = ledger.getBalance("ACC002");
         System.out.println("ACC001 balance: ₵" + balance1);
         System.out.println("ACC002 balance: ₵" + balance2);
         
         // Test 3: Log expenditures
         System.out.println("\nTest 3: Logging expenditures...");
-        boolean exp1 = ledger.logExpenditure("ACC001", new BigDecimal("50.00"), "Lunch");
-        boolean exp2 = ledger.logExpenditure("ACC001", new BigDecimal("25.75"), "Bus fare");
+        boolean exp1 = ledger.logExpenditure("ACC001", new Float("50.00"), "Lunch");
+        boolean exp2 = ledger.logExpenditure("ACC001", new Float("25.75"), "Bus fare");
         System.out.println("Expenditure logging results: " + exp1 + ", " + exp2);
         
         // Test 4: Check updated balances
@@ -82,9 +84,9 @@ public class SamuelModuleTest {
         // Test 1: Add expenditures
         System.out.println("Test 1: Adding expenditures...");
         Expenditure exp1 = new Expenditure("EXP001", "Lunch at cafeteria", 
-            new BigDecimal("25.50"), foodCategory, LocalDateTime.now(), "University Cafeteria");
+            new Float("25.50"), foodCategory, LocalDateTime.now(), "University Cafeteria", null, null);
         Expenditure exp2 = new Expenditure("EXP002", "Dinner with friends", 
-            new BigDecimal("45.00"), foodCategory, LocalDateTime.now(), "Pizza Palace");
+            new Float("45.00"), foodCategory, LocalDateTime.now(), "Pizza Palace", null, null);
         
         boolean add1 = manager.addExpenditure(exp1);
         boolean add2 = manager.addExpenditure(exp2);
@@ -108,7 +110,7 @@ public class SamuelModuleTest {
         
         // Test 4: Filter by amount
         System.out.println("\nTest 4: Filtering by amount...");
-        List<Expenditure> filtered = manager.filterByAmount(new BigDecimal("20.00"), new BigDecimal("30.00"));
+        List<Expenditure> filtered = manager.filterByAmount(new Float("20.00"), new Float("30.00"));
         System.out.println("Expenditures between ₵20-₵30: " + filtered.size());
         for (Expenditure exp : filtered) {
             System.out.println("  " + exp.get_summary());
@@ -123,7 +125,7 @@ public class SamuelModuleTest {
         
         // Test 6: Total amount
         System.out.println("\nTest 6: Total expenditure amount:");
-        BigDecimal total = manager.getTotalAmount();
+        float total = manager.getTotalAmount();
         System.out.println("Total: ₵" + total);
         
         // Test 7: Get by ID
