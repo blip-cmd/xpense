@@ -50,6 +50,11 @@ public class SimpleArrayList<T> implements Iterable<T> {
 
     public int size() { return size; }
 
+    public void set(int index, T element) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        elements[index] = element;
+    }
+
     private void ensureCapacity() {
         if (size >= elements.length) {
             Object[] bigger = new Object[elements.length * 2];
