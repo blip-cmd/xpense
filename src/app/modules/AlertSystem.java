@@ -4,7 +4,7 @@ import app.util.MinHeap;
 
 /**
  * Manages system alerts and notifications WITHOUT using built‑in data‑structure classes.
- * Implements an internal binary min‑heap where lower priority numbers come out first.
+ * Implements an internal binary in‑heap where lower priority numbers come out first.
  *
  * Big‑O  (n = number of alerts in the heap)
  * ─────────────────────────────────────────
