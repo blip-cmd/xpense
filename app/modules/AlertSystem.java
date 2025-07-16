@@ -50,7 +50,7 @@ public class AlertSystem {
 
     public void displayAllAlerts() {
         if (!hasAlerts()) {
-            System.out.println("[✔] No active alerts.");
+            System.out.println("No active alerts.");
             return;
         }
         System.out.println("=== ALERTS ===");
