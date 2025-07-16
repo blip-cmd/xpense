@@ -24,12 +24,35 @@ public class CLIHandler {
     private AnalyticsModule analyticsModule;
     private BankLedger bankLedger;
 
+    // ANSI color codes for CLI
+    private static final String RESET = "\u001B[0m";
+    private static final String CYAN = "\u001B[36m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String RED = "\u001B[31m";
+    private static final String YELLOW = "\u001B[33m";
+    private static final String BOLD = "\u001B[1m";
+
+    /**
+     * ALERT SYSTEM FUNCTIONALITY
+     * ──────────────────────────
+     * Implemented:
+     *   - Add alerts (manual and automatic)
+     *   - View alerts (displayAllAlerts)
+     *   - Alerts for errors and events
+     * Expected:
+     *   - Show alerts on login
+     *   - Save alerts to file when viewed
+     *   - Link alerts to bank accounts (low balance, etc.)
+     *   - Persist alerts for future sessions
+     */
+
     public CLIHandler(AlertSystem alertSystem) {
         this.alertSystem = alertSystem;
 
         // Micheal for data models Lion For Management
         this.expenditureManager = new ExpenditureManager();
-        this.bankLedger = new BankLedger();
+        // Link AlertSystem to BankLedger for low balance alerts
+        this.bankLedger = new BankLedger(alertSystem);
 
         this.categoryManager = new CategoryManager();
 
@@ -42,6 +65,9 @@ public class CLIHandler {
 
         // Load initial data
         loadInitialData();
+
+        // Show alerts on login
+        showAlertsOnLogin();
     }
 
     /**
@@ -72,6 +98,22 @@ public class CLIHandler {
         }
     }
 
+    private void showMainMenu() {
+        System.out.println("\n=== MAIN MENU ===");
+        System.out.println("1. Expenditure Management");
+        System.out.println("2. Category Management");
+        System.out.println("3. Bank Account Management");
+        System.out.println("4. Receipt Management");
+        System.out.println("5. Analytics & Reports");
+        System.out.println("6. View Alerts");
+        System.out.println("7. Help Menu");
+        System.out.println("8. Exit");
+        // Quick options
+        System.out.println("10. Add Expenditure (Quick)");
+        System.out.println("11. View All Expenditures (Quick)");
+        System.out.print("Select an option: ");
+    }
+
     public void displayMenu() {
         System.out.println("Welcome to Xpense - Project Financial Tracker");
         System.out.println("==============================================");
@@ -83,6 +125,11 @@ public class CLIHandler {
             String input = getUserInput();
             if (input == null)
                 continue;
+
+            if ("exit".equalsIgnoreCase(input) || "0".equals(input)) {
+                running = false;
+                continue;
+            }
 
             switch (input.toLowerCase()) {
                 case "1":
@@ -108,29 +155,21 @@ public class CLIHandler {
                     showHelpMenu();
                     break;
                 case "8":
-                case "exit":
                     running = false;
                     break;
+                case "10":
+                    addExpenditure();
+                    break;
+                case "11":
+                    viewAllExpenditures();
+                    break;
                 default:
-                    System.out.println("Invalid option. Type '7' or 'help' for assistance.");
+                    System.out.println("Invalid option. Type '7', 'help', or '0' to exit.");
             }
         }
 
         System.out.println("Exiting Xpense CLI. Goodbye!");
         scanner.close();
-    }
-
-    private void showMainMenu() {
-        System.out.println("\n=== MAIN MENU ===");
-        System.out.println("1. Expenditure Management");
-        System.out.println("2. Category Management");
-        System.out.println("3. Bank Account Management");
-        System.out.println("4. Receipt Management");
-        System.out.println("5. Analytics & Reports");
-        System.out.println("6. View Alerts");
-        System.out.println("7. Help Menu");
-        System.out.println("8. Exit");
-        System.out.print("Select an option: ");
     }
 
     private void addDummyAlert() {
@@ -149,21 +188,26 @@ public class CLIHandler {
             System.out.println("1. View all system alerts");
             System.out.println("2. Add a test alert manually");
             System.out.println("3. Return to Main Menu");
+            System.out.println("0. Exit");
             System.out.print("Select a help option: ");
             String helpInput = getUserInput();
+            if ("exit".equalsIgnoreCase(helpInput) || "0".equals(helpInput)) {
+                inHelp = false;
+                continue;
+            }
             switch (helpInput) {
                 case "1":
                     alertSystem.displayAllAlerts();
+                    saveAlertsToFile();
                     break;
                 case "2":
                     addDummyAlert();
                     break;
                 case "3":
-                case "exit":
                     inHelp = false;
                     break;
                 default:
-                    System.out.println("Invalid help option. Please select 1, 2, or 3.");
+                    System.out.println("Invalid help option. Please select 1, 2, 3, or 0 to exit.");
             }
         }
     }
@@ -185,12 +229,16 @@ public class CLIHandler {
             System.out.println("7. Filter by Amount Range");
             System.out.println("8. View Expenditures by Category");
             System.out.println("9. Return to Main Menu");
+            System.out.println("0. Exit");
             System.out.print("Select an option: ");
 
             String input = getUserInput();
             if (input == null)
                 continue;
-
+            if ("exit".equalsIgnoreCase(input) || "0".equals(input)) {
+                inExpenditureMenu = false;
+                continue;
+            }
             switch (input) {
                 case "1":
                     addExpenditure();
@@ -220,50 +268,55 @@ public class CLIHandler {
                     inExpenditureMenu = false;
                     break;
                 default:
-                    System.out.println("Invalid option. Please select 1-9.");
+                    System.out.println("Invalid option. Please select 1-9 or 0 to exit.");
             }
         }
     }
 
     private void addExpenditure() {
         try {
-            System.out.print("Enter expenditure ID: ");
+            System.out.print(CYAN + "Enter expenditure ID: " + RESET);
             String id = getUserInput();
+            if ("cancel".equalsIgnoreCase(id)) return;
             if (id == null || id.trim().isEmpty()) {
-                System.out.println("Invalid ID. Operation cancelled.");
+                System.out.println(RED + "Invalid ID. Operation cancelled." + RESET);
                 return;
             }
 
-            System.out.print("Enter description: ");
+            System.out.print(CYAN + "Enter description: " + RESET);
             String description = getUserInput();
+            if ("cancel".equalsIgnoreCase(description)) return;
             if (description == null || description.trim().isEmpty()) {
-                System.out.println("Invalid description. Operation cancelled.");
+                System.out.println(RED + "Invalid description. Operation cancelled." + RESET);
                 return;
             }
 
-            System.out.print("Enter amount: ");
+            System.out.print(CYAN + "Enter amount: " + RESET);
             String amountStr = getUserInput();
+            if ("cancel".equalsIgnoreCase(amountStr)) return;
             BigDecimal amount;
             try {
                 amount = new BigDecimal(amountStr);
                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                    System.out.println("Amount must be positive. Operation cancelled.");
+                    System.out.println(RED + "Amount must be positive. Operation cancelled." + RESET);
                     return;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid amount format. Operation cancelled.");
+                System.out.println(RED + "Invalid amount format. Operation cancelled." + RESET);
                 return;
             }
 
-            System.out.print("Enter category name: ");
+            System.out.print(CYAN + "Enter category name: " + RESET);
             String categoryName = getUserInput();
+            if ("cancel".equalsIgnoreCase(categoryName)) return;
             if (!categoryManager.validateCategory(categoryName)) {
                 System.out.println("Invalid category. Please add the category first.");
                 return;
             }
 
-            System.out.print("Enter location/phase: ");
+            System.out.print(CYAN + "Enter location/phase: " + RESET);
             String phase = getUserInput();
+            if ("cancel".equalsIgnoreCase(phase)) return;
 
             // Find the category object
             Category category = null;
@@ -282,32 +335,32 @@ public class CLIHandler {
             Expenditure expenditure = new Expenditure(id, description, amount, category, LocalDateTime.now(), phase);
 
             if (expenditureManager.addExpenditure(expenditure)) {
-                System.out.println("_/Expenditure added successfully!");
+                System.out.println(GREEN + "Expenditure added successfully!" + RESET);
                 // Update bank account balance (if integrated)
-                alertSystem.addAlert("New expenditure added: $" + amount, 3);
+                alertSystem.addAlert("New expenditure added: ₵" + amount, 3);
             } else {
-                System.out.println("X Failed to add expenditure. ID might already exist.");
+                System.out.println(RED + "Failed to add expenditure. ID might already exist." + RESET);
             }
 
         } catch (Exception e) {
-            System.out.println("Error adding expenditure: " + e.getMessage());
+            System.out.println(RED + "Error adding expenditure: " + e.getMessage() + RESET);
         }
     }
 
     private void viewAllExpenditures() {
         List<Expenditure> expenditures = expenditureManager.getAllExpenditures();
         if (expenditures.isEmpty()) {
-            System.out.println("No expenditures found.");
+            System.out.println(YELLOW + "No expenditures found." + RESET);
             return;
         }
 
-        System.out.println("\n=== ALL EXPENDITURES ===");
+        System.out.println(BOLD + "\n=== ALL EXPENDITURES ===" + RESET);
         System.out.printf("%-10s %-20s %-10s %-15s %-15s %-20s%n",
                 "ID", "Description", "Amount", "Category", "Date", "Location");
         System.out.println("─".repeat(90));
 
         for (Expenditure exp : expenditures) {
-            System.out.printf("%-10s %-20s $%-9.2f %-15s %-15s %-20s%n",
+            System.out.printf("%-10s %-20s ₵%-9.2f %-15s %-15s %-20s%n",
                     exp.getId(),
                     truncateString(exp.getDescription(), 20),
                     exp.getAmount().doubleValue(),
@@ -316,7 +369,7 @@ public class CLIHandler {
                     truncateString(exp.getPhase(), 20));
         }
 
-        System.out.println("\nTotal Amount: $" + expenditureManager.getTotalAmount());
+        System.out.println("\nTotal Amount: ₵" + expenditureManager.getTotalAmount());
     }
 
     private void searchExpenditures() {
@@ -501,7 +554,7 @@ public class CLIHandler {
             if (filtered.isEmpty()) {
                 System.out.println("No expenditures found in the specified range.");
             } else {
-                System.out.println("\n=== FILTERED EXPENDITURES ($" + min + " - $" + max + ") ===");
+                System.out.println("\n=== FILTERED EXPENDITURES (₵" + min + " - ₵" + max + ") ===");
                 displayExpenditureList(filtered);
             }
         } catch (NumberFormatException e) {
@@ -532,7 +585,7 @@ public class CLIHandler {
         System.out.println("─".repeat(90));
 
         for (Expenditure exp : expenditures) {
-            System.out.printf("%-10s %-20s $%-9.2f %-15s %-15s %-20s%n",
+            System.out.printf("%-10s %-20s ₵%-9.2f %-15s %-15s %-20s%n",
                     exp.getId(),
                     truncateString(exp.getDescription(), 20),
                     exp.getAmount().doubleValue(),
@@ -558,12 +611,16 @@ public class CLIHandler {
             System.out.println("6. Category Statistics");
             System.out.println("7. All Category Statistics");
             System.out.println("8. Return to Main Menu");
+            System.out.println("0. Exit");
             System.out.print("Select an option: ");
 
             String input = getUserInput();
             if (input == null)
                 continue;
-
+            if ("exit".equalsIgnoreCase(input) || "0".equals(input)) {
+                inCategoryMenu = false;
+                continue;
+            }
             switch (input) {
                 case "1":
                     addCategory();
@@ -590,7 +647,7 @@ public class CLIHandler {
                     inCategoryMenu = false;
                     break;
                 default:
-                    System.out.println("Invalid option. Please select 1-8.");
+                    System.out.println("Invalid option. Please select 1-8 or 0 to exit.");
             }
         }
     }
@@ -780,12 +837,16 @@ public class CLIHandler {
             System.out.println("4. Account Summary");
             System.out.println("5. Check Low Balance Alerts");
             System.out.println("6. Return to Main Menu");
+            System.out.println("0. Exit");
             System.out.print("Select an option: ");
 
             String input = getUserInput();
             if (input == null)
                 continue;
-
+            if ("exit".equalsIgnoreCase(input) || "0".equals(input)) {
+                inBankMenu = false;
+                continue;
+            }
             switch (input) {
                 case "1":
                     viewAllAccounts();
@@ -806,7 +867,7 @@ public class CLIHandler {
                     inBankMenu = false;
                     break;
                 default:
-                    System.out.println("Invalid option. Please select 1-6.");
+                    System.out.println("Invalid option. Please select 1-6 or 0 to exit.");
             }
         }
     }
@@ -825,7 +886,7 @@ public class CLIHandler {
 
         for (BankAccount account : accounts) {
             String status = account.getBalance().compareTo(new BigDecimal("100")) < 0 ? "LOW" : "OK";
-            System.out.printf("%-15s %-25s $%-14.2f %-15s%n",
+            System.out.printf("%-15s %-25s ₵%-14.2f %-15s%n",
                     account.getAccountId(),
                     truncateString(account.getAccountName(), 25),
                     account.getBalance().doubleValue(),
@@ -890,7 +951,7 @@ public class CLIHandler {
         System.out.println("\n=== ACCOUNT DETAILS ===");
         System.out.println("Account ID: " + account.getAccountId());
         System.out.println("Account Name: " + account.getAccountName());
-        System.out.println("Current Balance: $" + account.getBalance());
+        System.out.println("Current Balance: ₵" + account.getBalance());
         System.out.println("Account Status: "
                 + (account.getBalance().compareTo(new BigDecimal("100")) < 0 ? "LOW BALANCE" : "OK"));
     }
@@ -898,7 +959,7 @@ public class CLIHandler {
     private void viewAccountSummary() {
         System.out.println("\n=== ACCOUNT SUMMARY ===");
         BigDecimal totalBalance = bankLedger.getTotalBalance();
-        System.out.println("Total Balance Across All Accounts: $" + totalBalance);
+        System.out.println("Total Balance Across All Accounts: ₵" + totalBalance);
         System.out.println("Number of Accounts: " + bankLedger.getAllAccounts().size());
 
         // Show accounts with low balance
@@ -906,13 +967,15 @@ public class CLIHandler {
         for (BankAccount account : bankLedger.getAllAccounts()) {
             if (account.getBalance().compareTo(new BigDecimal("100")) < 0) {
                 lowBalanceAccounts.add(account);
+                // Link alert system to bank accounts for low balance
+                alertSystem.checkLowFunds(account.getAccountId(), account.getBalance().doubleValue());
             }
         }
 
         if (!lowBalanceAccounts.isEmpty()) {
-            System.out.println("\n⚠️  Accounts with Low Balance:");
+            System.out.println("\nAccounts with Low Balance:");
             for (BankAccount account : lowBalanceAccounts) {
-                System.out.println("  - " + account.getAccountName() + ": $" + account.getBalance());
+                System.out.println("  - " + account.getAccountName() + ": ₵" + account.getBalance());
             }
         }
     }
@@ -924,14 +987,16 @@ public class CLIHandler {
         System.out.println("\n=== LOW BALANCE CHECK ===");
         for (BankAccount account : accounts) {
             if (account.getBalance().compareTo(new BigDecimal("100")) < 0) {
-                System.out.println("⚠️  LOW BALANCE: " + account.getAccountName() +
-                        " (ID: " + account.getAccountId() + ") - Balance: $" + account.getBalance());
+                System.out.println("LOW BALANCE: " + account.getAccountName() +
+                        " (ID: " + account.getAccountId() + ") - Balance: ₵" + account.getBalance());
+                // Generate alert for low balance
+                alertSystem.checkLowFunds(account.getAccountId(), account.getBalance().doubleValue());
                 hasLowBalance = true;
             }
         }
 
         if (!hasLowBalance) {
-            System.out.println("✓ All accounts have sufficient balance.");
+            System.out.println("All accounts have sufficient balance.");
         }
     }
 
@@ -949,12 +1014,16 @@ public class CLIHandler {
             System.out.println("4. Link Receipt to Expenditure");
             System.out.println("5. Receipt History");
             System.out.println("6. Return to Main Menu");
+            System.out.println("0. Exit");
             System.out.print("Select an option: ");
 
             String input = getUserInput();
             if (input == null)
                 continue;
-
+            if ("exit".equalsIgnoreCase(input) || "0".equals(input)) {
+                inReceiptMenu = false;
+                continue;
+            }
             switch (input) {
                 case "1":
                     uploadReceipt();
@@ -975,7 +1044,7 @@ public class CLIHandler {
                     inReceiptMenu = false;
                     break;
                 default:
-                    System.out.println("Invalid option. Please select 1-6.");
+                    System.out.println("Invalid option. Please select 1-6 or 0 to exit.");
             }
         }
     }
@@ -1093,12 +1162,16 @@ public class CLIHandler {
             System.out.println("5. Spending Trends");
             System.out.println("6. Summary Statistics");
             System.out.println("7. Return to Main Menu");
+            System.out.println("0. Exit");
             System.out.print("Select an option: ");
 
             String input = getUserInput();
             if (input == null)
                 continue;
-
+            if ("exit".equalsIgnoreCase(input) || "0".equals(input)) {
+                inAnalyticsMenu = false;
+                continue;
+            }
             switch (input) {
                 case "1":
                     showMonthlyBurnRate();
@@ -1122,7 +1195,7 @@ public class CLIHandler {
                     inAnalyticsMenu = false;
                     break;
                 default:
-                    System.out.println("Invalid option. Please select 1-7.");
+                    System.out.println("Invalid option. Please select 1-7 or 0 to exit.");
             }
         }
     }
@@ -1132,9 +1205,9 @@ public class CLIHandler {
         double monthlyBurn = analyticsModule.calculateMonthlyBurn(expenditures);
 
         System.out.println("\n=== MONTHLY BURN RATE ===");
-        System.out.printf("Average Monthly Spending: $%.2f%n", monthlyBurn);
-        System.out.printf("Daily Average: $%.2f%n", monthlyBurn / 30);
-        System.out.printf("Weekly Average: $%.2f%n", monthlyBurn / 4);
+        System.out.printf("Average Monthly Spending: ₵%.2f%n", monthlyBurn);
+        System.out.printf("Daily Average: ₵%.2f%n", monthlyBurn / 30);
+        System.out.printf("Weekly Average: ₵%.2f%n", monthlyBurn / 4);
     }
 
     private void showCostAnalysis() {
@@ -1171,22 +1244,24 @@ public class CLIHandler {
         System.out.println(trends);
     }
 
+    @SuppressWarnings("deprecation")
     private void showSummaryStatistics() {
         List<Expenditure> expenditures = expenditureManager.getAllExpenditures();
         BigDecimal totalSpent = expenditureManager.getTotalAmount();
         BigDecimal totalBalance = bankLedger.getTotalBalance();
 
+        // Use Unicode for Cedi: \u20B5
         System.out.println("\n=== SUMMARY STATISTICS ===");
         System.out.println("Total Expenditures: " + expenditures.size());
-        System.out.println("Total Amount Spent: $" + totalSpent);
-        System.out.println("Total Bank Balance: $" + totalBalance);
+        System.out.println("Total Amount Spent: \u20B5" + totalSpent);
+        System.out.println("Total Bank Balance: \u20B5" + totalBalance);
         System.out.println("Number of Categories: " + categoryManager.getCategoryCount());
         System.out.println("Number of Bank Accounts: " + bankLedger.getAllAccounts().size());
 
         if (!expenditures.isEmpty()) {
             BigDecimal avgExpenditure = totalSpent.divide(new BigDecimal(expenditures.size()), 2,
                     BigDecimal.ROUND_HALF_UP);
-            System.out.println("Average Expenditure: $" + avgExpenditure);
+            System.out.println("Average Expenditure: \u20B5" + avgExpenditure);
         }
     }
 
@@ -1207,12 +1282,14 @@ public class CLIHandler {
             System.out.println("7. Data File Information");
             System.out.println("8. System Requirements");
             System.out.println("9. Return to Main Menu");
+            System.out.println("0. Exit");
             System.out.print("Select a help option: ");
 
             String helpInput = getUserInput();
-            if (helpInput == null)
+            if ("exit".equalsIgnoreCase(helpInput) || "0".equals(helpInput)) {
+                inHelp = false;
                 continue;
-
+            }
             switch (helpInput) {
                 case "1":
                     showAboutInfo();
@@ -1242,7 +1319,7 @@ public class CLIHandler {
                     inHelp = false;
                     break;
                 default:
-                    System.out.println("Invalid help option. Please select 1-9.");
+                    System.out.println("Invalid help option. Please select 1-9 or 0 to exit.");
             }
         }
     }
@@ -1346,16 +1423,46 @@ public class CLIHandler {
         System.out.println("• HashSet: Unique category collections");
     }
 
+    private void showAlertsOnLogin() {
+        if (alertSystem.hasAlerts()) {
+            System.out.println("\n=== SYSTEM ALERTS ===");
+            alertSystem.displayAllAlerts();
+            saveAlertsToFile();
+        }
+    }
+
+    private void saveAlertsToFile() {
+        try {
+            // Save alerts to alerts.txt (append mode)
+            java.io.FileWriter writer = new java.io.FileWriter("alerts.txt", true);
+            // For simplicity, just write a header and note that alerts were viewed
+            writer.write("Alerts viewed at: " + java.time.LocalDateTime.now() + "\n");
+            writer.close();
+        } catch (Exception e) {
+            System.out.println("Error saving alerts: " + e.getMessage());
+        }
+    }
+
     private String getUserInput() {
+        String input = null;
         try {
             if (scanner.hasNextLine()) {
-                return scanner.nextLine().trim();
+                input = scanner.nextLine().trim();
+                if ("cancel".equalsIgnoreCase(input)) {
+                    throw new CancelInputException();
+                }
             }
-            return null;
+        } catch (CancelInputException e) {
+            // Custom exception to handle cancel
+            return "cancel";
         } catch (Exception e) {
             return null;
         }
+        return input;
     }
+
+    // Custom exception for cancel
+    private static class CancelInputException extends RuntimeException {}
 
     private String truncateString(String str, int maxLength) {
         if (str == null)
