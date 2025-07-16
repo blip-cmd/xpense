@@ -2,9 +2,6 @@ package app.modules;
 
 import app.util.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 public class XpenseSystem {
     private final FileManager fileManager;
     private final AlertSystem alertSystem;
@@ -13,6 +10,7 @@ public class XpenseSystem {
     private final ExpenditureManager expenditureManager;
     private final ReceiptHandler receiptHandler;
     private final AnalyticsModule analyticsModule;
+    private final SearchAndSortModule searchSortModule;
 
     public XpenseSystem(double lowBalanceThreshold, double spendingLimitThreshold) {
         this.fileManager = new FileManager();
@@ -22,6 +20,7 @@ public class XpenseSystem {
         this.expenditureManager = new ExpenditureManager();
         this.receiptHandler = new ReceiptHandler();
         this.analyticsModule = new AnalyticsModule();
+        this.searchSortModule = new SearchAndSortModule();
         loadAllData();
     }
 
@@ -60,14 +59,14 @@ public class XpenseSystem {
         }
         BankAccount bank = bankLedger.getAccount(exp.getBankAccountId());
         if (!bank.debit(exp.getAmount())) {
-            alertSystem.addAlert("Insufficient funds in account " + bank.getAccountId(), 1);
+            alertSystem.addAlert("Insufficient funds in account " + bank.getAccountNumber(), 1);
             return false;
         }
         boolean added = expenditureManager.addExpenditure(exp);
         if (added) {
             categoryManager.addExpenditureToCategory(exp.getCategory().getName(), exp);
             bank.add_expenditure(exp);
-            bankLedger.logExpenditure(bank.getAccountId(), exp.getAmount(), exp.getDescription());
+            bankLedger.logExpenditure(bank.getAccountNumber(), exp.getAmount(), exp.getDescription());
             fileManager.saveExpenditures(expenditureManager.getAllExpenditures(), "expenditures.txt");
             fileManager.saveAccounts(bankLedger.getAllAccounts(), "accounts.txt");
             return true;
@@ -105,4 +104,5 @@ public class XpenseSystem {
     public ExpenditureManager getExpenditureManager() { return expenditureManager; }
     public AnalyticsModule getAnalyticsModule() { return analyticsModule; }
     public ReceiptHandler getReceiptHandler() { return receiptHandler; }
+    public SearchAndSortModule getSearchSortModule() { return searchSortModule; }
 }
