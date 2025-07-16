@@ -1,37 +1,121 @@
-# Xpense - Financial Tracker
-**Group 68 - DCIT308 DSA II Project**
+# Nkwa Real Estate Expenditure Management System
 
-## Project Overview
-A comprehensive expenditure management system built with Java, featuring expense tracking, category management, and financial analytics.
+## Overview
 
-## Project Structure
-- `src/app/` - Main application code
-- `src/app/modules/` - Core business logic modules
-- `src/test/` - Unit tests
-- `src/data/` - Data storage files
-- `docs/` - UML diagrams and documentation
+This project implements an **offline, locally-stored, command-line expenditure tracking application** for Nkwa Real Estate Ltd, designed for DCIT308 at the University of Ghana.  
+It uses **custom-built data structures only** (arrays, sets, maps, stacks, queues, heaps, etc.) and avoids all external libraries and Java Collections for business logic.
 
-## Getting Started
-1. Read `CONTRIBUTING.md` for development guidelines
-2. Choose your assigned module from the modules directory
-3. Implement the TODOs in your assigned files
-4. Write tests for your implementation
-5. Update documentation as needed
+## Features
 
-UMLs are in docs, add/edit as you see fit for your task.
+- **Expenditure Tracking:** Record code, amount, date, phase, category, and account used for each expenditure.
+- **Category Management:** Uniqueness enforced via sets. Search, add, edit, delete categories.
+- **Bank Account Ledger:** Store, update accounts; each expenditure draws funds and updates balances.
+- **Receipt/Invoice Handling:** Link receipts to expenditures; use queues/stacks for upload and review.
+- **Alerts:** Min-heap based priority alerts for low balances and overspending.
+- **Analytics:** Monthly burn rate, cost breakdown, simple profitability forecast.
+- **Search & Sort:** Sort by category or date; search by time, category, cost range, or account.
+- **Persistence:** All data stored in plain text files: `accounts.txt`, `categories.txt`, `expenditures.txt`, `receipts.txt`.
+- **CLI Menu:** Menu-driven workflow for all actions.
 
-## To Contribute:
-Each teammate forks the repo, works in their feature branch, then submits a pull request
+## Data Structures Used
 
-## How to Use
-Navigate to src directory, compile and run Main.java with proper package structure:
+- `SimpleArrayList` — dynamic arrays
+- `SimpleSet` — uniqueness for categories
+- `SimpleMap` — key-value mappings (accounts, expenditures)
+- `SimpleQueue` — FIFO for receipts
+- `SimpleStack` — LIFO for receipts
+- `MinHeap` — alert priorities
 
+## File Structure
 
-**Write Once, Run Anywhere:**
-```bash
-cd src
-javac -cp . app/Main.java
-java -cp . app.Main
+```
+src/
+  app/
+    Main.java
+    modules/
+      (All modules, managers, entities)
+    util/
+      (Custom data structures)
+  data/
+    accounts.txt
+    categories.txt
+    expenditures.txt
+    receipts.txt
 ```
 
-Note: The `-cp .` flag sets the classpath to the current directory, which is necessary for the package structure to work correctly.
+## Sample Data Files
+
+### accounts.txt
+
+```
+ACC001|Main Operations|5000.00
+ACC002|Marketing|2500.00
+ACC003|Sales|1000.00
+```
+
+### categories.txt
+
+```
+Cement|Building material|gray
+Printing|Marketing material|blue
+TV Adverts|Promotion|red
+```
+
+### expenditures.txt
+
+```
+EXP001|Cement purchase|1200.00|2025-07-01T09:15:00|Cement|ACC001
+EXP002|TV promo spot|500.00|2025-07-02T11:00:00|TV Adverts|ACC002
+EXP003|Brochure printing|300.00|2025-07-03T14:30:00|Printing|ACC002
+EXP004|Site sand|700.00|2025-07-05T10:20:00|Cement|ACC001
+```
+
+### receipts.txt
+
+```
+RCT001|EXP001|receipts/cement_july.pdf|2025-07-01T09:30:00
+RCT002|EXP002|receipts/tv_spot.jpeg|2025-07-02T11:10:00
+RCT003|EXP003|receipts/brochure.pdf|2025-07-03T14:35:00
+```
+
+## How to Run
+
+1. **Compile:**
+   ```
+   javac -d bin src/app/Main.java
+   ```
+
+2. **Run:**
+   ```
+   java -cp bin app.Main
+   ```
+
+3. **Interact:**
+   Use the CLI menu to add/view/edit expenditures, manage categories/accounts, view alerts, and analytics.
+
+## Complexity
+
+| Operation                        | Data Structure        | Complexity           |
+|-----------------------------------|----------------------|----------------------|
+| Add Expenditure                  | SimpleArrayList/Map  | O(1)                 |
+| Search by ID                     | Map                  | O(1)                 |
+| Sort by Category/Date            | Array                | O(n log n)           |
+| Category Uniqueness              | Set                  | O(n)                 |
+| Receipt Process                  | Queue/Stack          | O(1)                 |
+| Alert Processing                 | MinHeap              | O(log n)             |
+| Account Lookup/Update            | Map                  | O(1)                 |
+
+## Data Integrity & Rules
+
+- Expenditure must reference valid bank account and category.
+- Adding expenditure always debits account atomically.
+- Category names are unique.
+- Alerts for low balances and overspending.
+
+## Authors
+
+- Group 68, University of Ghana
+
+## License
+
+- Educational use only.
