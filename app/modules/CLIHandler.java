@@ -35,41 +35,43 @@ public class CLIHandler {
             System.out.println(BOLD + "\n=== MAIN MENU ===" + RESET);
             System.out.println(GREEN + "1. Add Expenditure" + RESET);
             System.out.println("2. List Expenditures");
-            System.out.println("3. Add Bank Account");
-            System.out.println("4. List Bank Accounts");
-            System.out.println("5. Add Category");
-            System.out.println("6. List Categories");
-            System.out.println(YELLOW + "7. View Alerts" + RESET);
-            System.out.println("8. Search & Sort");
-            System.out.println(PURPLE + "9. Generate Reports" + RESET);
-            System.out.println(CYAN + "10. Bank Overview" + RESET);
-            System.out.println("11. Receipt Management");
-            System.out.println(BLUE + "12. Help & About" + RESET);
+            System.out.println("3. View Expenditure Details");
+            System.out.println("4. Add Bank Account");
+            System.out.println("5. List Bank Accounts");
+            System.out.println("6. Add Category");
+            System.out.println("7. List Categories");
+            System.out.println(YELLOW + "8. View Alerts" + RESET);
+            System.out.println("9. Search & Sort");
+            System.out.println(PURPLE + "10. Generate Reports" + RESET);
+            System.out.println(CYAN + "11. Bank Overview" + RESET);
+            System.out.println("12. Receipt Management");
+            System.out.println(BLUE + "13. Help & About" + RESET);
             System.out.println(RED + "0. Exit" + RESET);
             System.out.println("----------------------------------------------");
-            System.out.print(BOLD + "Select an option (0-12): " + RESET);
+            System.out.print(BOLD + "Select an option (0-13): " + RESET);
             String input = scanner.nextLine().trim();
             switch (input) {
                 case "0": running = false; break;
                 case "1": addExpenditure(); break;
                 case "2": listExpenditures(); break;
-                case "3": addBankAccount(); break;
-                case "4": listBankAccounts(); break;
-                case "5": addCategory(); break;
-                case "6": listCategories(); break;
-                case "7": xpense.getAlertSystem().displayAllAlerts(); waitForKeyPress(); break;
-                case "8": searchAndSortMenu(); break;
-                case "9": generateReportsMenu(); break;
-                case "10": bankOverviewMenu(); break;
-                case "11": receiptManagementMenu(); break;
-                case "12": showHelpAndAbout(); break;
+                case "3": viewExpenditureDetails(); break;
+                case "4": addBankAccount(); break;
+                case "5": listBankAccounts(); break;
+                case "6": addCategory(); break;
+                case "7": listCategories(); break;
+                case "8": xpense.getAlertSystem().displayAllAlerts(); waitForKeyPress(); break;
+                case "9": searchAndSortMenu(); break;
+                case "10": generateReportsMenu(); break;
+                case "11": bankOverviewMenu(); break;
+                case "12": receiptManagementMenu(); break;
+                case "13": showHelpAndAbout(); break;
                 default: 
-                    System.out.println(RED + "❌ Invalid option. Please enter a number between 0-12." + RESET); 
+                    System.out.println(RED + "Invalid option. Please enter a number between 0-13." + RESET); 
                     waitForKeyPress();
                     break;
             }
         }
-        System.out.println(GREEN + "✅ Exiting Xpense CLI. Goodbye!" + RESET);
+        System.out.println(GREEN + "Exiting Xpense CLI. Goodbye!" + RESET);
         scanner.close();
     }
 
@@ -77,20 +79,17 @@ public class CLIHandler {
         System.out.println(BOLD + CYAN + "\n=== ADD NEW EXPENDITURE ===" + RESET);
         System.out.println(YELLOW + "💡 Tip: Enter 'cancel' or '0' at any time to go back" + RESET);
         
-        String id = getInputWithCancel("Expenditure ID");
-        if (id == null) return;
-        
         String description = getInputWithCancel("Description");
         if (description == null) return;
         if (description.trim().isEmpty()) {
-            System.out.println(RED + "❌ Description cannot be blank. Please provide a valid description." + RESET);
+            System.out.println(RED + "Description cannot be blank. Please provide a valid description." + RESET);
             return;
         }
         
         System.out.print("Amount (GHc): ");
         String amountStr = scanner.nextLine().trim();
         if ("cancel".equalsIgnoreCase(amountStr) || "0".equals(amountStr)) {
-            System.out.println(RED + "❌ Operation cancelled." + RESET);
+            System.out.println(RED + "Operation cancelled." + RESET);
             return;
         }
         
@@ -98,11 +97,11 @@ public class CLIHandler {
         try {
             amount = new BigDecimal(amountStr);
             if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                System.out.println(RED + "❌ Amount must be greater than zero." + RESET);
+                System.out.println(RED + "Amount must be greater than zero." + RESET);
                 return;
             }
         } catch (NumberFormatException e) {
-            System.out.println(RED + "❌ Invalid amount format. Please enter a valid number." + RESET);
+            System.out.println(RED + "Invalid amount format. Please enter a valid number." + RESET);
             return;
         }
         
@@ -110,13 +109,13 @@ public class CLIHandler {
         if (categoryName == null) return;
         
         if (!xpense.getCategoryManager().validateCategory(categoryName)) {
-            System.out.println("❌ Category '" + categoryName + "' does not exist.");
+            System.out.println("Category '" + categoryName + "' does not exist.");
             System.out.print("Would you like to create this category now? (y/n): ");
             String createChoice = scanner.nextLine().trim();
             if ("y".equalsIgnoreCase(createChoice) || "yes".equalsIgnoreCase(createChoice)) {
                 createCategoryFromAdd(categoryName);
             } else {
-                System.out.println("❌ Operation cancelled. Please use an existing category or create the category first.");
+                System.out.println("Operation cancelled. Please use an existing category or create the category first.");
                 return;
             }
         }
@@ -141,17 +140,19 @@ public class CLIHandler {
         if (bankAccountId == null) return;
         
         if (xpense.getBankLedger().getAccount(bankAccountId) == null) {
-            System.out.println("❌ Bank account '" + bankAccountId + "' does not exist.");
+            System.out.println("Bank account '" + bankAccountId + "' does not exist.");
             return;
         }
         
-        Expenditure exp = new Expenditure(id, description, amount, category, LocalDateTime.now(), phase);
+        Expenditure exp = new Expenditure(description, amount, category, LocalDateTime.now(), phase);
         exp.setBankAccountId(bankAccountId);
         boolean added = xpense.addExpenditure(exp);
         if (added) {
-            System.out.println("✅ Expenditure added successfully and bank account debited.");
+            // Get the generated ID from the expenditure
+            String generatedId = exp.getId();
+            System.out.println("Expenditure added successfully with ID: " + generatedId + " and bank account debited.");
         } else {
-            System.out.println("❌ Failed to add expenditure. Please check alerts for details.");
+            System.out.println("Failed to add expenditure. Please check alerts for details.");
         }
         waitForKeyPress();
     }
@@ -170,9 +171,9 @@ public class CLIHandler {
         Category newCategory = new Category(categoryId, categoryName, description, color);
         boolean added = xpense.addCategory(newCategory);
         if (added) {
-            System.out.println("✅ Category '" + categoryName + "' created successfully.");
+            System.out.println("Category '" + categoryName + "' created successfully.");
         } else {
-            System.out.println("❌ Failed to create category.");
+            System.out.println("Failed to create category.");
         }
     }
 
@@ -198,6 +199,29 @@ public class CLIHandler {
                 e.getPhase(), 
                 e.getBankAccountId() != null ? e.getBankAccountId() : "N/A");
         }
+        waitForKeyPress();
+    }
+
+    private void viewExpenditureDetails() {
+        System.out.print("Enter expenditure ID to view details: ");
+        String id = scanner.nextLine().trim();
+        
+        if (id.isEmpty()) {
+            System.out.println("Invalid ID.");
+            waitForKeyPress();
+            return;
+        }
+        
+        SimpleArrayList<Expenditure> expenditures = xpense.getAllExpenditures();
+        for (int i = 0; i < expenditures.size(); i++) {
+            Expenditure exp = expenditures.get(i);
+            if (exp.getId().equalsIgnoreCase(id)) {
+                displayExpenditureDetails(exp);
+                waitForKeyPress();
+                return;
+            }
+        }
+        System.out.println("Expenditure with ID '" + id + "' not found.");
         waitForKeyPress();
     }
     
@@ -277,7 +301,7 @@ public class CLIHandler {
                 case "6": searchByBankAccount(); waitForKeyPress(); break;
                 case "7": searchByPhase(); waitForKeyPress(); break;
                 default: 
-                    System.out.println("❌ Invalid option. Please enter a number between 0-7."); 
+                    System.out.println("Invalid option. Please enter a number between 0-7."); 
                     waitForKeyPress();
                     break;
             }
@@ -307,7 +331,7 @@ public class CLIHandler {
                 case "5": generateBuildingMaterialAnalysis(); waitForKeyPress(); break;
                 case "6": generatePhaseAnalysis(); waitForKeyPress(); break;
                 default: 
-                    System.out.println("❌ Invalid option. Please enter a number between 0-6."); 
+                    System.out.println("Invalid option. Please enter a number between 0-6."); 
                     waitForKeyPress();
                     break;
             }
@@ -331,7 +355,7 @@ public class CLIHandler {
                 case "2": viewAccountHistory(); waitForKeyPress(); break;
                 case "3": generateAccountSummary(); waitForKeyPress(); break;
                 default: 
-                    System.out.println("❌ Invalid option. Please enter a number between 0-3."); 
+                    System.out.println("Invalid option. Please enter a number between 0-3."); 
                     waitForKeyPress();
                     break;
             }
@@ -355,7 +379,7 @@ public class CLIHandler {
                 case "2": viewAllReceipts(); waitForKeyPress(); break;
                 case "3": linkReceiptToExpenditure(); waitForKeyPress(); break;
                 default: 
-                    System.out.println("❌ Invalid option. Please enter a number between 0-3."); 
+                    System.out.println("Invalid option. Please enter a number between 0-3."); 
                     waitForKeyPress();
                     break;
             }
@@ -441,14 +465,42 @@ public class CLIHandler {
             System.out.println("No expenditures found.");
             return;
         }
-        System.out.println("ID | Description | Amount | Category | Date | Phase | Account");
+        System.out.println("ID | Description | Amount | Category | Date | Phase | Account | Receipt");
+        System.out.println("---|-------------|--------|----------|------|-------|---------|--------");
         for (int i = 0; i < expenditures.size(); i++) {
             Expenditure e = expenditures.get(i);
-            System.out.printf("%s | %s | GHc%s | %s | %s | %s | %s\n",
+            String receiptDisplay = (e.getReceiptInfo() != null && !e.getReceiptInfo().trim().isEmpty()) 
+                ? e.getReceiptInfo() : "No receipt";
+            System.out.printf("%s | %s | GHc%s | %s | %s | %s | %s | %s\n",
                 e.getId(), e.getDescription(), e.getAmount(),
                 e.getCategory().getName(), e.getDateTime().toLocalDate(), 
-                e.getPhase(), e.getBankAccountId());
+                e.getPhase(), e.getBankAccountId(), receiptDisplay);
         }
+    }
+
+    /**
+     * Display detailed view of a single expenditure including receipt information
+     */
+    private void displayExpenditureDetails(Expenditure expenditure) {
+        System.out.println("\n=== EXPENDITURE DETAILS ===");
+        System.out.println("ID: " + expenditure.getId());
+        System.out.println("Description: " + expenditure.getDescription());
+        System.out.println("Amount: GHc" + expenditure.getAmount());
+        System.out.println("Category: " + expenditure.getCategory().getName());
+        System.out.println("Date: " + expenditure.getDateTime().toLocalDate());
+        System.out.println("Time: " + expenditure.getDateTime().toLocalTime());
+        System.out.println("Phase: " + expenditure.getPhase());
+        System.out.println("Bank Account: " + expenditure.getBankAccountId());
+        
+        String receiptInfo = expenditure.getReceiptInfo();
+        if (receiptInfo != null && !receiptInfo.trim().isEmpty()) {
+            System.out.println("Receipt: " + receiptInfo);
+            System.out.println("Receipt Status: Linked");
+        } else {
+            System.out.println("Receipt: No receipt linked");
+            System.out.println("Receipt Status: Not linked");
+        }
+        System.out.println("================================");
     }
 
     // Report Generation Methods
@@ -577,16 +629,28 @@ public class CLIHandler {
 
     private void linkReceiptToExpenditure() {
         System.out.print("Enter expenditure ID: ");
-        String expId = scanner.nextLine();
+        String expId = scanner.nextLine().trim();
         System.out.print("Enter receipt file path: ");
-        String receiptPath = scanner.nextLine();
+        String receiptPath = scanner.nextLine().trim();
+        
+        if (expId.isEmpty()) {
+            System.out.println("Invalid expenditure ID.");
+            return;
+        }
+        
+        if (receiptPath.isEmpty()) {
+            System.out.println("Invalid receipt path.");
+            return;
+        }
         
         SimpleArrayList<Expenditure> expenditures = xpense.getAllExpenditures();
         for (int i = 0; i < expenditures.size(); i++) {
             Expenditure exp = expenditures.get(i);
             if (exp.getId().equals(expId)) {
                 exp.setReceiptInfo(receiptPath);
-                System.out.println("Receipt linked to expenditure successfully.");
+                // Save the updated data to file
+                xpense.saveAll();
+                System.out.println("Receipt linked to expenditure successfully and saved to file.");
                 return;
             }
         }
@@ -638,7 +702,7 @@ public class CLIHandler {
         System.out.print(prompt + " (or 'cancel'/'0' to go back): ");
         String input = scanner.nextLine().trim();
         if ("cancel".equalsIgnoreCase(input) || "0".equals(input)) {
-            System.out.println("❌ Operation cancelled.");
+            System.out.println("Operation cancelled.");
             return null;
         }
         return input;

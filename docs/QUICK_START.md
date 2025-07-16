@@ -59,12 +59,12 @@ git push origin feature/your-branch-name
 
 ## ⚠️ CRITICAL CONSTRAINT:
 **NO external packages/libraries allowed!** Only use Java's built-in libraries:
-- ✅ `java.util.*` (ArrayList, HashMap, Scanner, etc.)
-- ✅ `java.io.*` (File operations)
-- ✅ `java.time.*` (Date/Time handling)
-- ✅ `java.math.*` (BigDecimal, etc.)
-- ❌ NO Maven/Gradle dependencies
-- ❌ NO external JARs
+- `java.util.*` (ArrayList, HashMap, Scanner, etc.)
+- `java.io.*` (File operations)
+- `java.time.*` (Date/Time handling)
+- `java.math.*` (BigDecimal, etc.)
+- NO Maven/Gradle dependencies
+- NO external JARs
 
 ## Need Help?
 - Check the group chat immediately

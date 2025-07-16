@@ -63,12 +63,16 @@ TV Adverts|Promotion|red
 
 ### expenditures.txt
 
+Format: `ID|Description|Amount|DateTime|Category|AccountID|ReceiptPath`
+
 ```
-EXP001|Cement purchase|1200.00|2025-07-01T09:15:00|Cement|ACC001
-EXP002|TV promo spot|500.00|2025-07-02T11:00:00|TV Adverts|ACC002
-EXP003|Brochure printing|300.00|2025-07-03T14:30:00|Printing|ACC002
-EXP004|Site sand|700.00|2025-07-05T10:20:00|Cement|ACC001
+EXP001|Cement purchase|1200.00|2025-07-01T09:15:00|Cement|ACC001|receipts/cement_receipt.pdf
+EXP002|TV promo spot|500.00|2025-07-02T11:00:00|TV Adverts|ACC002|receipts/tv_invoice.jpg
+EXP003|Brochure printing|300.00|2025-07-03T14:30:00|Printing|ACC002|
+EXP004|Site sand|700.00|2025-07-05T10:20:00|Cement|ACC001|receipts/sand_receipt.pdf
 ```
+
+**Note:** The 7th field (ReceiptPath) is optional and can be empty for expenditures without linked receipts.
 
 ### receipts.txt
 

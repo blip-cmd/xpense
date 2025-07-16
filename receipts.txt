@@ -1,3 +1,0 @@
-RCT001|EXP001|receipts/cement_july.pdf|2025-07-01T09:30:00
-RCT002|EXP002|receipts/tv_spot.jpeg|2025-07-02T11:10:00
-RCT003|EXP003|receipts/brochure.pdf|2025-07-03T14:35:00

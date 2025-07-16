@@ -16,14 +16,26 @@ public class FileManager {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length < 6) continue;
+                if (parts.length < 6) continue; // Need at least 6 fields for basic expenditure
+                
                 String code = parts[0];
                 String description = parts[1];
                 BigDecimal amount = new BigDecimal(parts[2]);
                 Category category = new Category("DEFAULT", parts[4], "Default category", "blue");
                 LocalDateTime dateTime = LocalDateTime.parse(parts[3]);
                 String phase = "active";
-                Expenditure exp = new Expenditure(code, description, amount, category, dateTime, phase, parts[5]);
+                String bankAccountId = parts[5];
+                
+                // Handle receipt info (7th field) - for backward compatibility
+                String receiptInfo = null;
+                if (parts.length >= 7) {
+                    receiptInfo = parts[6].trim().isEmpty() ? null : parts[6];
+                }
+                
+                Expenditure exp = new Expenditure(code, description, amount, category, dateTime, phase, bankAccountId);
+                if (receiptInfo != null) {
+                    exp.setReceiptInfo(receiptInfo);
+                }
                 expenditures.add(exp);
             }
         } catch (IOException e) {}
@@ -40,7 +52,8 @@ public class FileManager {
                         exp.getAmount().toString(),
                         exp.getDateTime().toString(),
                         exp.getCategory().getName(),
-                        exp.getBankAccountId() != null ? exp.getBankAccountId() : ""
+                        exp.getBankAccountId() != null ? exp.getBankAccountId() : "",
+                        exp.getReceiptInfo() != null ? exp.getReceiptInfo() : ""
                 );
                 bw.write(line);
                 bw.newLine();

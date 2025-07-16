@@ -154,9 +154,9 @@
 ## Common Implementation Guidelines
 
 ### **IMPORTANT: Java Standard Library Only**
-- ❌ **NO external packages/libraries allowed** (no Maven, Gradle dependencies)
-- ✅ **ONLY use Java's built-in libraries** (java.util.*, java.io.*, java.time.*, etc.)
-- ✅ All current imports are compliant (ArrayList, HashMap, Scanner, etc.)
+- **NO external packages/libraries allowed** (no Maven, Gradle dependencies)
+- **ONLY use Java's built-in libraries** (java.util.*, java.io.*, java.time.*, etc.)
+- All current imports are compliant (ArrayList, HashMap, Scanner, etc.)
 
 ### Data Structure Requirements (DSA II Focus):
 - **Lists**: ArrayList, LinkedList for dynamic data storage
@@ -167,7 +167,7 @@
 - **Trees**: For hierarchical data (categories)
 
 ### File Format Specifications:
-- **expenditures.txt**: code|amount|date|phase|category|accountId
+- **expenditures.txt**: code|amount|date|phase|category|accountId|receiptPath
 - **categories.txt**: name|description|color
 - **accounts.txt**: accountId|accountName|balance
 - **receipts.txt**: receiptId|expenseCode|filePath|timestamp
