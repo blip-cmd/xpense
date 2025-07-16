@@ -32,9 +32,9 @@ public class AnalyticsModule {
             categoryTotals.put(cat, prev == null ? e.getAmount() : prev.add(e.getAmount()));
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("Total Expenditure: ₵").append(total).append("\nBy Category:\n");
+        sb.append("Total Expenditure: GHc ").append(total).append("\nBy Category:\n");
         for (int i = 0; i < categoryTotals.size(); i++) {
-            sb.append("  ").append(categoryTotals.getKeyAt(i)).append(": ₵").append(categoryTotals.getAt(i)).append("\n");
+            sb.append("  ").append(categoryTotals.getKeyAt(i)).append(": GHc ").append(categoryTotals.getAt(i)).append("\n");
         }
         return sb.toString();
     }
@@ -65,10 +65,10 @@ public class AnalyticsModule {
         
         StringBuilder sb = new StringBuilder();
         sb.append("=== PROFITABILITY FORECAST (").append(forecastMonths).append(" months) ===\n");
-        sb.append("Monthly Burn Rate: ₵").append(monthlyBurn).append("\n");
-        sb.append("Projected Total Costs: ₵").append(totalProjectedCosts).append("\n");
-        sb.append("Projected Revenue: ₵").append(projectedRevenue).append("\n");
-        sb.append("Projected Profit: ₵").append(projectedProfit).append("\n");
+        sb.append("Monthly Burn Rate: GHc ").append(monthlyBurn).append("\n");
+        sb.append("Projected Total Costs: GHc ").append(totalProjectedCosts).append("\n");
+        sb.append("Projected Revenue: GHc ").append(projectedRevenue).append("\n");
+        sb.append("Projected Profit: GHc ").append(projectedProfit).append("\n");
         
         if (projectedProfit.compareTo(BigDecimal.ZERO) > 0) {
             sb.append("Status: PROFITABLE\n");
@@ -107,9 +107,9 @@ public class AnalyticsModule {
         
         StringBuilder sb = new StringBuilder();
         sb.append("=== BUILDING MATERIAL COST ANALYSIS ===\n");
-        sb.append("Total Material Costs: ₵").append(materialCosts).append("\n");
+        sb.append("Total Material Costs: GHc ").append(materialCosts).append("\n");
         sb.append("Material Expenditures Count: ").append(materialCount).append("\n");
-        sb.append("Target House Price: ₵").append(targetHousePrice).append("\n");
+        sb.append("Target House Price: GHc ").append(targetHousePrice).append("\n");
         sb.append("Material Cost as % of House Price: ").append(materialPercentage).append("%\n");
         
         if (materialPercentage.compareTo(BigDecimal.valueOf(40)) > 0) {
@@ -146,7 +146,7 @@ public class AnalyticsModule {
             String phase = phaseTotals.getKeyAt(i);
             BigDecimal total = phaseTotals.getAt(i);
             Integer count = phaseCounts.get(phase);
-            sb.append(phase).append(": ₵").append(total).append(" (").append(count).append(" expenses)\n");
+            sb.append(phase).append(": GHc ").append(total).append(" (").append(count).append(" expenses)\n");
         }
         
         return sb.toString();

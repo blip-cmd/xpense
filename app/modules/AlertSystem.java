@@ -42,7 +42,7 @@ public class AlertSystem {
 
     public boolean checkLowFunds(String accountId, double currentBalance) {
         if (currentBalance < lowBalanceThreshold) {
-            addAlert("Account " + accountId + " is low on funds: ₵" + currentBalance, 1);
+            addAlert("Account " + accountId + " is low on funds: GHc " + currentBalance, 1);
             return true;
         }
         return false;

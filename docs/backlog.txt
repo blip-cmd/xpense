@@ -1,9 +1,18 @@
 Improvements (Prioritized):
 
+COMPLETED ✅:
+1. [Adams] exit point at any part of menu not working (only works in main menu) ✅
+3. [Fenteng] blank description ✅
+11. [Adams] CLI User Friendly ✅
+12. [Ryan] Ask for category to be created now. ✅
+14. [Adams] cancel at any stage ✅
+16. [Adams] apply colors to cli ✅
+17. [Adams] Change $ to Cedis ✅
+20. [Adams] Press any key to continue ✅
+21. [Adams] Show about info in help menu ✅
+
 Urgent:
-1. [Adams] exit point at any part of menu not working (only works in main menu)
 2. [Adams] show options available at each stage to avoid repetitive work
-3. [Fenteng] blank description
 4. [Adams] Unknown characters like emojis produce question marks
 5. [Samuel] When adding an expenditure, you specify bank account (update automatically)
 6. [Ransford] Analytics should be per account.
@@ -13,19 +22,12 @@ Urgent:
 10. [Ransford] Crosscheck analytics in account with Reports Menu [viewAllCategoryStatistics, viewCategoryStatistics]
 
 High:
-11. [Adams] CLI User Friendly
-12. [Ryan] Ask for category to be created now.
 13. [Ryan] color tag
-14. [Adams] cancel at any stage
 15. [Michel] Receipt history not found.
-16. [Adams] apply colors to cli
-17. [Adams] Change $ to Cedis
 
 Medium:
 18. [Samuel] Location in all expenditures table shows active not inputted string. (Expenditure expenditure = new Expenditure(id, description, amount, category, LocalDateTime.now(), phase);)
 19. [Wisdom] implement import java.util.List; import java.util.ArrayList;
-20. [Adams] Press any key to continue
-21. [Adams] Show about info in help menu
 22. [Adams] Quick options in MAIN MENU (like 10. Add Expenditure)
 
 Nice to have:
