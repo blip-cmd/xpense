@@ -2,11 +2,11 @@ package app.modules;
 
 import app.util.*;
 import java.io.*;
-import java.time.LocalDateTime;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class FileManager {
-    private final String dataDir = "src/data/";
+    private final String dataDir = "";
 
     public FileManager() {}
 
