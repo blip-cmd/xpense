@@ -7,7 +7,9 @@
 
 - Invalid data should be specified.
     edit the CLIHandler to include more helpful error messages with examples.
-- 
+
+- Generic Type T error.
+  - Bullets not known to console
 
 ### UI/UX Improvements
 - Category colors

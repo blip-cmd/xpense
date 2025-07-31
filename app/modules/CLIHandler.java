@@ -28,7 +28,7 @@ public class CLIHandler {
 
     public void displayMenu() {
         System.out.println(CYAN + "===============================================" + RESET);
-        System.out.println(BOLD + BLUE + "    Welcome to Xpense - Project Financial Tracker" + RESET);
+        System.out.println(BOLD + BLUE + "    Welcome to Xpense - Your Project's Financial Tracker" + RESET);
         System.out.println(CYAN + "===============================================" + RESET);
         boolean running = true;
         while (running) {
@@ -66,8 +66,7 @@ public class CLIHandler {
                 case "12": receiptManagementMenu(); break;
                 case "13": showHelpAndAbout(); break;
                 default: 
-                    System.out.println(RED + "Invalid option. Please enter a number between 0-13." + RESET); 
-                    waitForKeyPress();
+                    displayMenuOptionHelp("0-13");
                     break;
             }
         }
@@ -77,7 +76,7 @@ public class CLIHandler {
 
     private void addExpenditure() {
         System.out.println(BOLD + CYAN + "\n=== ADD NEW EXPENDITURE ===" + RESET);
-        System.out.println(YELLOW + "💡 Tip: Enter 'cancel' or '0' at any time to go back" + RESET);
+        System.out.println(YELLOW + "Tip: Enter 'cancel' or '0' at any time to go back" + RESET);
         
         String description = getInputWithCancel("Description");
         if (description == null) return;
@@ -101,7 +100,7 @@ public class CLIHandler {
                 return;
             }
         } catch (NumberFormatException e) {
-            System.out.println(RED + "Invalid amount format. Please enter a valid number." + RESET);
+            displayAmountFormatHelp();
             return;
         }
         
@@ -109,7 +108,7 @@ public class CLIHandler {
         if (categoryName == null) return;
         
         if (!xpense.getCategoryManager().validateCategory(categoryName)) {
-            System.out.println("Category '" + categoryName + "' does not exist.");
+            displayCategoryFormatHelp();
             System.out.print("Would you like to create this category now? (y/n): ");
             String createChoice = scanner.nextLine().trim();
             if ("y".equalsIgnoreCase(createChoice) || "yes".equalsIgnoreCase(createChoice)) {
@@ -140,7 +139,7 @@ public class CLIHandler {
         if (bankAccountId == null) return;
         
         if (xpense.getBankLedger().getAccount(bankAccountId) == null) {
-            System.out.println("Bank account '" + bankAccountId + "' does not exist.");
+            displayAccountIdFormatHelp();
             return;
         }
         
@@ -207,7 +206,7 @@ public class CLIHandler {
         String id = scanner.nextLine().trim();
         
         if (id.isEmpty()) {
-            System.out.println("Invalid ID.");
+            displayExpenditureIdFormatHelp();
             waitForKeyPress();
             return;
         }
@@ -301,8 +300,7 @@ public class CLIHandler {
                 case "6": searchByBankAccount(); waitForKeyPress(); break;
                 case "7": searchByPhase(); waitForKeyPress(); break;
                 default: 
-                    System.out.println("Invalid option. Please enter a number between 0-7."); 
-                    waitForKeyPress();
+                    displayMenuOptionHelp("0-7");
                     break;
             }
         }
@@ -413,7 +411,7 @@ public class CLIHandler {
                 .searchByTimeRange(xpense.getAllExpenditures(), startDate, endDate);
             displayExpenditures(results, "SEARCH RESULTS: " + startStr + " to " + endStr);
         } catch (Exception e) {
-            System.out.println("Invalid date format. Please use YYYY-MM-DD format.");
+            displayDateFormatHelp();
         }
     }
 
@@ -437,7 +435,7 @@ public class CLIHandler {
                 .searchByCostRange(xpense.getAllExpenditures(), minAmount, maxAmount);
             displayExpenditures(results, "SEARCH RESULTS: GHc" + minAmount + " to GHc" + maxAmount);
         } catch (Exception e) {
-            System.out.println("Invalid amount format. Please enter valid numbers.");
+            displayAmountFormatHelp();
         }
     }
 
@@ -532,7 +530,7 @@ public class CLIHandler {
                 .generateProfitabilityForecast(xpense.getAllExpenditures(), revenue, months);
             System.out.println("\n" + forecast);
         } catch (Exception e) {
-            System.out.println("Invalid input format. Please enter valid numbers.");
+            displayAmountFormatHelp();
         }
     }
 
@@ -545,7 +543,7 @@ public class CLIHandler {
                 .analyzeBuildingMaterialCosts(xpense.getAllExpenditures(), housePrice);
             System.out.println("\n" + analysis);
         } catch (Exception e) {
-            System.out.println("Invalid price format. Please enter a valid number.");
+            displayAmountFormatHelp();
         }
     }
 
@@ -672,7 +670,7 @@ public class CLIHandler {
         System.out.println("Purpose: Track construction project expenditures");
         System.out.println();
         System.out.println("=== HELP & NAVIGATION TIPS ===");
-        System.out.println("• Enter '0' at any menu to go back or exit");
+        System.out.println("- Enter '0' at any menu to go back or exit");
         System.out.println("• Use 'cancel' to cancel current operation");
         System.out.println("• All amounts are in Ghana Cedis (GHc)");
         System.out.println("• Dates are automatically recorded");
@@ -710,5 +708,106 @@ public class CLIHandler {
 
     private boolean isValidExit(String input) {
         return "0".equals(input) || "exit".equalsIgnoreCase(input) || "back".equalsIgnoreCase(input);
+    }
+
+    // Format help methods for better user experience
+    private void displayAmountFormatHelp() {
+        System.out.println(RED + "X Invalid amount format!" + RESET);
+        System.out.println(YELLOW + "Please enter amounts in one of these formats:" + RESET);
+        System.out.println("   • " + GREEN + "1500" + RESET + " (for GHc 1,500)");
+        System.out.println("   • " + GREEN + "1500.00" + RESET + " (for GHc 1,500.00)");
+        System.out.println("   • " + GREEN + "250.50" + RESET + " (for GHc 250.50)");
+        System.out.println("   • " + GREEN + "75" + RESET + " (for GHc 75)");
+        System.out.println(CYAN + "Examples: 1000, 1500.50, 250, 75.25" + RESET);
+        System.out.println(RED + "X Don't include: Currency symbols (GHc, ¢), commas, or letters" + RESET);
+        waitForKeyPress();
+    }
+
+    private void displayDateFormatHelp() {
+        System.out.println(RED + "X Invalid date format!" + RESET);
+        System.out.println(YELLOW + "Please enter dates in YYYY-MM-DD format:" + RESET);
+        System.out.println("   • " + GREEN + "2025-07-31" + RESET + " (July 31, 2025)");
+        System.out.println("   • " + GREEN + "2025-01-15" + RESET + " (January 15, 2025)");
+        System.out.println("   • " + GREEN + "2025-12-25" + RESET + " (December 25, 2025)");
+        System.out.println(CYAN + "Format: YYYY-MM-DD (Year-Month-Day)" + RESET);
+        System.out.println(RED + "X Don't use: DD/MM/YYYY, MM-DD-YYYY, or other formats" + RESET);
+        waitForKeyPress();
+    }
+
+    private void displayAccountIdFormatHelp() {
+        System.out.println(RED + "X Invalid account ID format!" + RESET);
+        System.out.println(YELLOW + "Please enter account IDs in these formats:" + RESET);
+        System.out.println("   • " + GREEN + "ACC001" + RESET + " (3 letters + 3 numbers)");
+        System.out.println("   • " + GREEN + "CAL001" + RESET + " (Bank initials + numbers)");
+        System.out.println("   • " + GREEN + "UMB002" + RESET + " (Another example)");
+        System.out.println(CYAN + "Examples from your system:" + RESET);
+        listExistingAccountIds();
+        waitForKeyPress();
+    }
+
+    private void displayCategoryFormatHelp() {
+        System.out.println(RED + "X Category doesn't exist!" + RESET);
+        System.out.println(YELLOW + "Available categories in your system:" + RESET);
+        SimpleArrayList<Category> categories = xpense.getAllCategories();
+        if (categories.size() == 0) {
+            System.out.println("   • " + RED + "No categories found. Please create a category first." + RESET);
+        } else {
+            for (int i = 0; i < categories.size(); i++) {
+                Category cat = categories.get(i);
+                System.out.println("   • " + GREEN + cat.getName() + RESET + " (" + cat.getDescription() + ")");
+            }
+        }
+        System.out.println(CYAN + "Enter the exact category name from the list above" + RESET);
+        System.out.println(BLUE + "Or type the category name to create a new one" + RESET);
+        waitForKeyPress();
+    }
+
+    private void displayMenuOptionHelp(String validRange) {
+        System.out.println(RED + "X Invalid menu option!" + RESET);
+        System.out.println(YELLOW + "Please enter a number from " + validRange + RESET);
+        System.out.println(CYAN + "Examples: " + RESET);
+        if (validRange.contains("0-13")) {
+            System.out.println("   • " + GREEN + "1" + RESET + " - Add Expenditure");
+            System.out.println("   • " + GREEN + "2" + RESET + " - List Expenditures");
+            System.out.println("   • " + GREEN + "8" + RESET + " - View Alerts");
+            System.out.println("   • " + GREEN + "0" + RESET + " - Exit");
+        } else if (validRange.contains("0-7")) {
+            System.out.println("   • " + GREEN + "1" + RESET + " - Sort by Category");
+            System.out.println("   • " + GREEN + "3" + RESET + " - Search by Time Range");
+            System.out.println("   • " + GREEN + "0" + RESET + " - Back to Main Menu");
+        }
+        waitForKeyPress();
+    }
+
+    private void listExistingAccountIds() {
+        SimpleArrayList<BankAccount> accounts = xpense.getAllBankAccounts();
+        if (accounts.size() == 0) {
+            System.out.println("   • " + RED + "No accounts found. Please create an account first." + RESET);
+        } else {
+            for (int i = 0; i < accounts.size(); i++) {
+                BankAccount acc = accounts.get(i);
+                System.out.println("   • " + GREEN + acc.getAccountNumber() + RESET + " (" + acc.getAccountName() + ")");
+            }
+        }
+    }
+
+    private void displayExpenditureIdFormatHelp() {
+        System.out.println(RED + "X Invalid expenditure ID!" + RESET);
+        System.out.println(YELLOW + "Available expenditure IDs in your system:" + RESET);
+        SimpleArrayList<Expenditure> expenditures = xpense.getAllExpenditures();
+        if (expenditures.size() == 0) {
+            System.out.println("   • " + RED + "No expenditures found. Please add an expenditure first." + RESET);
+        } else {
+            System.out.println(CYAN + "Recent expenditure IDs:" + RESET);
+            int max = Math.min(5, expenditures.size()); // Show last 5
+            for (int i = expenditures.size() - max; i < expenditures.size(); i++) {
+                Expenditure exp = expenditures.get(i);
+                System.out.println("   • " + GREEN + exp.getId() + RESET + " - " + truncateString(exp.getDescription(), 25));
+            }
+            if (expenditures.size() > 5) {
+                System.out.println("   ... and " + (expenditures.size() - 5) + " more (use option 2 to view all)");
+            }
+        }
+        System.out.println(BLUE + "Enter the exact ID from the list above" + RESET);
     }
 }
