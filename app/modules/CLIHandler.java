@@ -671,11 +671,11 @@ public class CLIHandler {
         System.out.println();
         System.out.println("=== HELP & NAVIGATION TIPS ===");
         System.out.println("- Enter '0' at any menu to go back or exit");
-        System.out.println("• Use 'cancel' to cancel current operation");
-        System.out.println("• All amounts are in Ghana Cedis (GHc)");
-        System.out.println("• Dates are automatically recorded");
-        System.out.println("• Bank accounts are automatically debited");
-        System.out.println("• Categories must exist before adding expenditures");
+        System.out.println("- Use 'cancel' to cancel current operation");
+        System.out.println("- All amounts are in Ghana Cedis (GHc)");
+        System.out.println("- Dates are automatically recorded");
+        System.out.println("- Bank accounts are automatically debited");
+        System.out.println("- Categories must exist before adding expenditures");
         System.out.println();
         System.out.println("=== QUICK ACCESS ===");
         System.out.println("Main Menu Option 1: Add Expenditure");
@@ -714,21 +714,21 @@ public class CLIHandler {
     private void displayAmountFormatHelp() {
         System.out.println(RED + "X Invalid amount format!" + RESET);
         System.out.println(YELLOW + "Please enter amounts in one of these formats:" + RESET);
-        System.out.println("   • " + GREEN + "1500" + RESET + " (for GHc 1,500)");
-        System.out.println("   • " + GREEN + "1500.00" + RESET + " (for GHc 1,500.00)");
-        System.out.println("   • " + GREEN + "250.50" + RESET + " (for GHc 250.50)");
-        System.out.println("   • " + GREEN + "75" + RESET + " (for GHc 75)");
+        System.out.println("   - " + GREEN + "1500" + RESET + " (for GHc 1,500)");
+        System.out.println("   - " + GREEN + "1500.00" + RESET + " (for GHc 1,500.00)");
+        System.out.println("   - " + GREEN + "250.50" + RESET + " (for GHc 250.50)");
+        System.out.println("   - " + GREEN + "75" + RESET + " (for GHc 75)");
         System.out.println(CYAN + "Examples: 1000, 1500.50, 250, 75.25" + RESET);
-        System.out.println(RED + "X Don't include: Currency symbols (GHc, ¢), commas, or letters" + RESET);
+        System.out.println(RED + "X Don't include: Currency symbols (GHc, cents), commas, or letters" + RESET);
         waitForKeyPress();
     }
 
     private void displayDateFormatHelp() {
         System.out.println(RED + "X Invalid date format!" + RESET);
         System.out.println(YELLOW + "Please enter dates in YYYY-MM-DD format:" + RESET);
-        System.out.println("   • " + GREEN + "2025-07-31" + RESET + " (July 31, 2025)");
-        System.out.println("   • " + GREEN + "2025-01-15" + RESET + " (January 15, 2025)");
-        System.out.println("   • " + GREEN + "2025-12-25" + RESET + " (December 25, 2025)");
+        System.out.println("   - " + GREEN + "2025-07-31" + RESET + " (July 31, 2025)");
+        System.out.println("   - " + GREEN + "2025-01-15" + RESET + " (January 15, 2025)");
+        System.out.println("   - " + GREEN + "2025-12-25" + RESET + " (December 25, 2025)");
         System.out.println(CYAN + "Format: YYYY-MM-DD (Year-Month-Day)" + RESET);
         System.out.println(RED + "X Don't use: DD/MM/YYYY, MM-DD-YYYY, or other formats" + RESET);
         waitForKeyPress();
@@ -737,9 +737,9 @@ public class CLIHandler {
     private void displayAccountIdFormatHelp() {
         System.out.println(RED + "X Invalid account ID format!" + RESET);
         System.out.println(YELLOW + "Please enter account IDs in these formats:" + RESET);
-        System.out.println("   • " + GREEN + "ACC001" + RESET + " (3 letters + 3 numbers)");
-        System.out.println("   • " + GREEN + "CAL001" + RESET + " (Bank initials + numbers)");
-        System.out.println("   • " + GREEN + "UMB002" + RESET + " (Another example)");
+        System.out.println("   - " + GREEN + "ACC001" + RESET + " (3 letters + 3 numbers)");
+        System.out.println("   - " + GREEN + "CAL001" + RESET + " (Bank initials + numbers)");
+        System.out.println("   - " + GREEN + "UMB002" + RESET + " (Another example)");
         System.out.println(CYAN + "Examples from your system:" + RESET);
         listExistingAccountIds();
         waitForKeyPress();
@@ -750,11 +750,11 @@ public class CLIHandler {
         System.out.println(YELLOW + "Available categories in your system:" + RESET);
         SimpleArrayList<Category> categories = xpense.getAllCategories();
         if (categories.size() == 0) {
-            System.out.println("   • " + RED + "No categories found. Please create a category first." + RESET);
+            System.out.println("   - " + RED + "No categories found. Please create a category first." + RESET);
         } else {
             for (int i = 0; i < categories.size(); i++) {
                 Category cat = categories.get(i);
-                System.out.println("   • " + GREEN + cat.getName() + RESET + " (" + cat.getDescription() + ")");
+                System.out.println("   - " + GREEN + cat.getName() + RESET + " (" + cat.getDescription() + ")");
             }
         }
         System.out.println(CYAN + "Enter the exact category name from the list above" + RESET);
@@ -767,14 +767,14 @@ public class CLIHandler {
         System.out.println(YELLOW + "Please enter a number from " + validRange + RESET);
         System.out.println(CYAN + "Examples: " + RESET);
         if (validRange.contains("0-13")) {
-            System.out.println("   • " + GREEN + "1" + RESET + " - Add Expenditure");
-            System.out.println("   • " + GREEN + "2" + RESET + " - List Expenditures");
-            System.out.println("   • " + GREEN + "8" + RESET + " - View Alerts");
-            System.out.println("   • " + GREEN + "0" + RESET + " - Exit");
+            System.out.println("   - " + GREEN + "1" + RESET + " - Add Expenditure");
+            System.out.println("   - " + GREEN + "2" + RESET + " - List Expenditures");
+            System.out.println("   - " + GREEN + "8" + RESET + " - View Alerts");
+            System.out.println("   - " + GREEN + "0" + RESET + " - Exit");
         } else if (validRange.contains("0-7")) {
-            System.out.println("   • " + GREEN + "1" + RESET + " - Sort by Category");
-            System.out.println("   • " + GREEN + "3" + RESET + " - Search by Time Range");
-            System.out.println("   • " + GREEN + "0" + RESET + " - Back to Main Menu");
+            System.out.println("   - " + GREEN + "1" + RESET + " - Sort by Category");
+            System.out.println("   - " + GREEN + "3" + RESET + " - Search by Time Range");
+            System.out.println("   - " + GREEN + "0" + RESET + " - Back to Main Menu");
         }
         waitForKeyPress();
     }

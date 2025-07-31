@@ -19,12 +19,12 @@ It uses **custom-built data structures only** (arrays, sets, maps, stacks, queue
 
 ## Data Structures Used
 
-- `SimpleArrayList` — dynamic arrays
-- `SimpleSet` — uniqueness for categories
-- `SimpleMap` — key-value mappings (accounts, expenditures)
-- `SimpleQueue` — FIFO for receipts
-- `SimpleStack` — LIFO for receipts
-- `MinHeap` — alert priorities
+- `SimpleArrayList` - dynamic arrays
+- `SimpleSet` - uniqueness for categories
+- `SimpleMap` - key-value mappings (accounts, expenditures)
+- `SimpleQueue` - FIFO for receipts
+- `SimpleStack` - LIFO for receipts
+- `MinHeap` - alert priorities
 
 ## File Structure
 
@@ -97,7 +97,10 @@ RCT003|EXP003|receipts/brochure.pdf|2025-07-03T14:35:00
 3. **Interact:**
    Use the CLI menu to add/view/edit expenditures, manage categories/accounts, view alerts, and analytics.
 
-## Complexity
+4. **Clean .class files recursively:**
+    ```bash
+    find . -type f -name "*.class" -delete
+    ```
 
 | Operation                        | Data Structure        | Complexity           |
 |-----------------------------------|----------------------|----------------------|
