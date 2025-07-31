@@ -1,14 +1,6 @@
 # Real Estate Expenditure System — Backlog (Outstanding Tasks Only)
 
-- Category.txt in two diff paths
-  - Manual Add Category works
-  - Auto Add Category also works
-  - Unable to recreate the problem
-
-- Invalid data should be specified.
-    edit the CLIHandler to include more helpful error messages with examples.
-
-- Generic Type T error.
+- Generic Type T error on console compilation.
   - Bullets not known to console
 
 ### UI/UX Improvements
@@ -26,25 +18,17 @@ DONE doesn't imply TESTED
 
 ## **High Priority**
 
-1. 
 ---
 
 ## **Medium Priority**
-
-
 
 ---
 
 ## **Nice to Have**
 
-? at each field shows what the field is for and sample values
-
-1. [Adams] Add "HELP AND UTILITY METHODS" to CLI (show helper functions, usage tips)
-
-1. [Adams] Show options available at each stage to avoid repetitive work (NICE TO HAVE)
-
 FULL FUNCTIONAL TESTING
 FULL NON-FUNCTIONAL TESTING
+COMPLETE USER ACCEPTANCE TESTING
 ---
 
 ## **DSA to Implement in UTIL (if not present already)**
@@ -53,15 +37,14 @@ FULL NON-FUNCTIONAL TESTING
 ---
 
 ## **QUESTIONS**
-
-3. [Wisdom] Javadocs: How/where used? Can you print documentation directly?
+1. [Wisdom] Javadocs: How/where used? Can you print documentation directly?
 
 ---
 
 ## **Tasks for Immediate Discussion**
 
-1. [All] Individual DSA Report (How each DSA works in program/module, how it simulates accountant workflow)
-2. [All] Understand and implement all DSA (will be in util folder)
+1. [All] Individual DSA Report (How each DSA works with the programme module, how it simulates accountant workflow) - check the Submission Report
+2. [All] Understand all the implemented  DSA (will be in util folder)
 
 ---
 
