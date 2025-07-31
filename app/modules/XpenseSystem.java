@@ -32,13 +32,34 @@ public class XpenseSystem {
         for (int i = 0; i < accounts.size(); i++) bankLedger.addAccount(accounts.get(i));
 
         SimpleArrayList<Expenditure> expenditures = fileManager.loadExpenditures("expenditures.txt");
+        // Resolve category references for loaded expenditures
+        for (int i = 0; i < expenditures.size(); i++) {
+            Expenditure exp = expenditures.get(i);
+            // Find the actual category object by name
+            String categoryName = exp.getCategory().getName();
+            Category actualCategory = null;
+            SimpleArrayList<Category> allCategories = categoryManager.getAllCategories();
+            for (int j = 0; j < allCategories.size(); j++) {
+                if (allCategories.get(j).getName().equalsIgnoreCase(categoryName)) {
+                    actualCategory = allCategories.get(j);
+                    break;
+                }
+            }
+            if (actualCategory != null) {
+                exp.setCategory(actualCategory);
+            }
+        }
+        
+        // Use the loadExpenditures method to properly initialize the ID counter
+        expenditureManager.loadExpenditures(expenditures);
+        
+        // Add expenditures to categories and bank accounts
         for (int i = 0; i < expenditures.size(); i++) {
             Expenditure exp = expenditures.get(i);
             if (exp.getBankAccountId() != null &&
                 bankLedger.getAccount(exp.getBankAccountId()) != null &&
                 categoryManager.validateCategory(exp.getCategory().getName())) 
             {
-                expenditureManager.addExpenditure(exp);
                 categoryManager.addExpenditureToCategory(exp.getCategory().getName(), exp);
                 bankLedger.getAccount(exp.getBankAccountId()).add_expenditure(exp);
             }

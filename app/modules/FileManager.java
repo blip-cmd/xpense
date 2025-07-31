@@ -16,21 +16,36 @@ public class FileManager {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length < 6) continue; // Need at least 6 fields for basic expenditure
+                if (parts.length < 5) continue; // Need at least 5 fields for basic expenditure
                 
                 String code = parts[0];
                 String description = parts[1];
                 BigDecimal amount = new BigDecimal(parts[2]);
-                Category category = new Category("DEFAULT", parts[4], "Default category", "blue");
                 LocalDateTime dateTime = LocalDateTime.parse(parts[3]);
-                String phase = "active";
-                String bankAccountId = parts[5];
                 
-                // Handle receipt info (7th field) - for backward compatibility
+                // Handle different file formats for backward compatibility
+                String categoryName, bankAccountId, phase = "active";
                 String receiptInfo = null;
-                if (parts.length >= 7) {
-                    receiptInfo = parts[6].trim().isEmpty() ? null : parts[6];
+                
+                if (parts.length == 6) {
+                    // Old format: ID|description|amount|datetime|categoryName|bankAccountId
+                    categoryName = parts[4];
+                    bankAccountId = parts[5];
+                } else if (parts.length >= 7) {
+                    // New format: ID|description|amount|datetime|phase|categoryName|bankAccountId|receiptInfo
+                    phase = parts[4];
+                    categoryName = parts[5];
+                    bankAccountId = parts[6];
+                    if (parts.length >= 8) {
+                        receiptInfo = parts[7].trim().isEmpty() ? null : parts[7];
+                    }
+                } else {
+                    // Incomplete data, skip this line
+                    continue;
                 }
+                
+                // Create a temporary category - the actual category will be resolved later
+                Category category = new Category("TEMP_" + categoryName, categoryName, "Loaded category", "blue");
                 
                 Expenditure exp = new Expenditure(code, description, amount, category, dateTime, phase, bankAccountId);
                 if (receiptInfo != null) {
@@ -51,6 +66,7 @@ public class FileManager {
                         exp.getDescription(),
                         exp.getAmount().toString(),
                         exp.getDateTime().toString(),
+                        exp.getPhase() != null ? exp.getPhase() : "active", // Include phase field
                         exp.getCategory().getName(),
                         exp.getBankAccountId() != null ? exp.getBankAccountId() : "",
                         exp.getReceiptInfo() != null ? exp.getReceiptInfo() : ""

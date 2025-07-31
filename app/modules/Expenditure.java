@@ -3,6 +3,14 @@ package app.modules;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+Construction
+Maintenance
+Planning
+Marketing
+Sales
+ */
+
 public class Expenditure {
     private String id;
     private String description;

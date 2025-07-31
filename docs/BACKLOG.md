@@ -12,18 +12,15 @@
   - Bullets not known to console
 
 ### UI/UX Improvements
-- Category colors
-- default categories/phases should suit real estate
+- Category colors (NICE TO HAVE)
+- default categories/phases should suit real estate (e.g., "Construction", "Maintenance", etc. ) (NICE TO HAVE)
+
 
 ## **Urgent**
+DONE doesn't imply TESTED
 
-1. [Adams] Show options available at each stage to avoid repetitive work
-2. [Adams] Unknown characters like emojis/cedis produce question marks
-3. [Ransford] Analytics should be per account (ensure breakdown by account in analytics/report)
-4. [Adams] Check if alert system is linked to bank accounts and if it's persisted
-5. [Adams] Functions of the implemented alert system vs the expected (document differences)
-6. [Ransford] COST Analysis report and Category breakdown are the same output (deduplicate/clarify)
-7. [Ransford] Crosscheck analytics in account with Reports Menu ([viewAllCategoryStatistics, viewCategoryStatistics])
+2. [Adams] Unknown characters produce question marks
+
 
 ---
 
@@ -34,8 +31,7 @@
 
 ## **Medium Priority**
 
-1. [Samuel] Phase field in expenditures table shows "active" not inputted string (fix phase/location bug)
-3. [Adams] Quick options in MAIN MENU (e.g., 10. Add Expenditure)
+
 
 ---
 
@@ -45,11 +41,13 @@
 
 1. [Adams] Add "HELP AND UTILITY METHODS" to CLI (show helper functions, usage tips)
 
+1. [Adams] Show options available at each stage to avoid repetitive work (NICE TO HAVE)
+
+FULL FUNCTIONAL TESTING
+FULL NON-FUNCTIONAL TESTING
 ---
 
 ## **DSA to Implement in UTIL (if not present already)**
-
-- [Fenteng] `TreeMap` (simulate as SimpleTreeMap if not present)
 
 
 ---
