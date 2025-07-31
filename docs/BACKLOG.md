@@ -11,13 +11,6 @@
 ## **Urgent**
 DONE doesn't imply TESTED
 
-2. [Adams] Unknown characters produce question marks ✓ FIXED
-   - Replaced all Unicode bullet points (•) with ASCII hyphens (-) in CLIHandler.java
-   - Replaced all em dashes (—) with regular hyphens (-) in README.md and BACKLOG.md
-   - Fixed cents symbol (¢) to "cents" text in CLIHandler.java
-   - All characters now display correctly in console
-
-
 ---
 
 ## **High Priority**
