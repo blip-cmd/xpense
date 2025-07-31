@@ -1,7 +1,13 @@
 # Real Estate Expenditure System — Backlog (Outstanding Tasks Only)
 
-- Category.txt in two
+- Category.txt in two diff paths
+  - Manual Add Category works
+  - Auto Add Category also works
+  - Unable to recreate the problem
+
 - Invalid data should be specified.
+    edit the CLIHandler to include more helpful error messages with examples.
+- 
 
 ### UI/UX Improvements
 - Category colors

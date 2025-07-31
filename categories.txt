@@ -1,3 +1,2 @@
-Food and Drinks|Food and Drinks|Green
-Transpoty|Commuting around sites|blue
-dfs|df|d
+Bank|BANK ACCOUNT|Green
+Yoghurt|Milk stuff|Pink
