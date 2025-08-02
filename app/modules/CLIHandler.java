@@ -1,3 +1,22 @@
+/**
+ * CLIHandler.java
+ * 
+ * Command Line Interface handler for the Nkwa Real Estate Expenditure Management System.
+ * This class provides a comprehensive menu-driven interface for interacting with all
+ * system features including expenditure management, bank account operations, 
+ * category management, reporting, analytics, and receipt handling.
+ * 
+ * The CLI features:
+ * - Color-coded output for enhanced user experience
+ * - Input validation and error handling with helpful messages
+ * - Comprehensive help system with format examples
+ * - Multi-level menu navigation with cancel options
+ * - Real-time data display and reporting capabilities
+ * 
+ * @author Group 68, University of Ghana
+ * @version 1.0
+ * @since 2025
+ */
 package app.modules;
 
 import app.util.*;
@@ -6,32 +25,90 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
+/**
+ * CLIHandler manages the command-line user interface for the Xpense application.
+ * 
+ * This class serves as the primary interaction layer between users and the XpenseSystem,
+ * providing:
+ * - Menu-driven navigation with color-coded options
+ * - Input validation and user-friendly error messages
+ * - Comprehensive help system with format examples
+ * - Real-time data operations and immediate feedback
+ * - Multi-level menus for different functional areas
+ * - Graceful error handling with operation cancellation support
+ * 
+ * The interface is designed to be intuitive for non-technical users while providing
+ * comprehensive access to all system functionality including data entry, reporting,
+ * searching, and analytics.
+ */
 public class CLIHandler {
-    // ANSI Color codes for CLI enhancement
+    // ANSI Color codes for enhanced CLI user experience
+    /** Reset color to default */
     private static final String RESET = "\u001B[0m";
+    /** Red color for errors and warnings */
     private static final String RED = "\u001B[31m";
+    /** Green color for success messages and confirmations */
     private static final String GREEN = "\u001B[32m";
+    /** Yellow color for tips and warnings */
     private static final String YELLOW = "\u001B[33m";
+    /** Blue color for information and headers */
     private static final String BLUE = "\u001B[34m";
+    /** Purple color for special features like reports */
     private static final String PURPLE = "\u001B[35m";
+    /** Cyan color for decorative elements and highlights */
     private static final String CYAN = "\u001B[36m";
+    /** White color for standard text */
     private static final String WHITE = "\u001B[37m";
+    /** Bold formatting for emphasis */
     private static final String BOLD = "\u001B[1m";
     
+    /** Reference to the core XpenseSystem for all business operations */
     private final XpenseSystem xpense;
+    
+    /** Scanner for reading user input from the command line */
     private final Scanner scanner;
 
+    /**
+     * Constructs a new CLIHandler with the specified XpenseSystem.
+     * 
+     * Initializes the command-line interface with a reference to the core
+     * expense management system and sets up input scanning capabilities.
+     * 
+     * @param xpenseSystem The XpenseSystem instance to operate on
+     */
     public CLIHandler(XpenseSystem xpenseSystem) {
         this.xpense = xpenseSystem;
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Displays the main menu and handles user navigation throughout the application.
+     * 
+     * This is the primary entry point for user interaction. It presents a
+     * color-coded menu with all available features and continuously processes
+     * user selections until the user chooses to exit.
+     * 
+     * The main menu provides access to:
+     * - Expenditure management (add, list, view details)
+     * - Bank account operations (add, list, overview)
+     * - Category management (add, list)
+     * - Alert viewing and management
+     * - Search and sorting capabilities
+     * - Report generation and analytics
+     * - Receipt management
+     * - Help and application information
+     * 
+     * The method ensures graceful shutdown by closing the scanner when exiting.
+     */
     public void displayMenu() {
+        // Display welcome banner with color formatting
         System.out.println(CYAN + "===============================================" + RESET);
         System.out.println(BOLD + BLUE + "    Welcome to Xpense - Your Project's Financial Tracker" + RESET);
         System.out.println(CYAN + "===============================================" + RESET);
+        
         boolean running = true;
         while (running) {
+            // Display the main menu with color-coded options
             System.out.println(BOLD + "\n=== MAIN MENU ===" + RESET);
             System.out.println(GREEN + "1. Add Expenditure" + RESET);
             System.out.println("2. List Expenditures");
@@ -49,6 +126,8 @@ public class CLIHandler {
             System.out.println(RED + "0. Exit" + RESET);
             System.out.println("----------------------------------------------");
             System.out.print(BOLD + "Select an option (0-13): " + RESET);
+            
+            // Process user input and route to appropriate handler
             String input = scanner.nextLine().trim();
             switch (input) {
                 case "0": running = false; break;
@@ -66,14 +145,34 @@ public class CLIHandler {
                 case "12": receiptManagementMenu(); break;
                 case "13": showHelpAndAbout(); break;
                 default: 
+                    // Handle invalid menu selections with helpful feedback
                     displayMenuOptionHelp("0-13");
                     break;
             }
         }
+        
+        // Graceful shutdown with resource cleanup
         System.out.println(GREEN + "Exiting Xpense CLI. Goodbye!" + RESET);
         scanner.close();
     }
 
+    /**
+     * Handles the addition of new expenditures with comprehensive validation.
+     * 
+     * This method guides users through the expenditure creation process with:
+     * - Step-by-step input collection with cancellation options
+     * - Real-time validation for all input fields
+     * - Automatic category creation if needed
+     * - Bank account validation and balance checking
+     * - Immediate feedback on success or failure
+     * 
+     * The process ensures data integrity by validating:
+     * - Description (non-empty)
+     * - Amount (positive number)
+     * - Category (must exist or can be created)
+     * - Bank account (must exist and have sufficient funds)
+     * - Phase (defaults to "active" if not specified)
+     */
     private void addExpenditure() {
         System.out.println(BOLD + CYAN + "\n=== ADD NEW EXPENDITURE ===" + RESET);
         System.out.println(YELLOW + "Tip: Enter 'cancel' or '0' at any time to go back" + RESET);
