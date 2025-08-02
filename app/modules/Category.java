@@ -45,11 +45,11 @@ public class Category {
         if (this == obj) return true;
         if (!(obj instanceof Category)) return false;
         Category other = (Category) obj;
-        return name.equalsIgnoreCase(other.name);
+        return name != null && other.name != null && name.equalsIgnoreCase(other.name);
     }
 
     @Override
     public int hashCode() {
-        return name.toLowerCase().hashCode();
+        return name != null ? name.toLowerCase().hashCode() : 0;
     }
 }

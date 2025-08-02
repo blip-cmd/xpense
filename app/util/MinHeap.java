@@ -1,7 +1,7 @@
 package app.util;
 
 public class MinHeap<T> {
-    private Object[] heap;
+    private T[] heap;
     private int size;
     private static final int INITIAL_CAPACITY = 16;
     private final PriorityComparator<T> comparator;
@@ -10,28 +10,30 @@ public class MinHeap<T> {
         int compare(T a, T b);
     }
 
+    @SuppressWarnings("unchecked")
     public MinHeap(PriorityComparator<T> comparator) {
         this.comparator = comparator;
-        this.heap = new Object[INITIAL_CAPACITY + 1];
+        this.heap = (T[]) new Object[INITIAL_CAPACITY + 1];
         this.size = 0;
     }
 
+    @SuppressWarnings("unchecked")
     private void ensureCapacity() {
         if (size >= heap.length - 1) {
-            Object[] bigger = new Object[heap.length * 2];
+            T[] bigger = (T[]) new Object[heap.length * 2];
             System.arraycopy(heap, 0, bigger, 0, heap.length);
             heap = bigger;
         }
     }
 
     private void swap(int i, int j) {
-        Object temp = heap[i]; heap[i] = heap[j]; heap[j] = temp;
+        T temp = heap[i]; heap[i] = heap[j]; heap[j] = temp;
     }
 
     private void siftUp(int idx) {
         while (idx > 1) {
             int parent = idx / 2;
-            if (comparator.compare((T)heap[idx], (T)heap[parent]) < 0) {
+            if (comparator.compare(heap[idx], heap[parent]) < 0) {
                 swap(idx, parent); idx = parent;
             } else break;
         }
@@ -41,10 +43,10 @@ public class MinHeap<T> {
         while (2 * idx <= size) {
             int left = 2 * idx, right = left + 1, smallest = left;
             if (right <= size &&
-                comparator.compare((T)heap[right], (T)heap[left]) < 0) {
+                comparator.compare(heap[right], heap[left]) < 0) {
                 smallest = right;
             }
-            if (comparator.compare((T)heap[smallest], (T)heap[idx]) < 0) {
+            if (comparator.compare(heap[smallest], heap[idx]) < 0) {
                 swap(idx, smallest); idx = smallest;
             } else break;
         }
@@ -58,7 +60,7 @@ public class MinHeap<T> {
 
     public T removeMin() {
         if (size == 0) return null;
-        T min = (T)heap[1];
+        T min = heap[1];
         heap[1] = heap[size--];
         siftDown(1);
         return min;
