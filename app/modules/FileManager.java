@@ -80,12 +80,13 @@ public class FileManager {
 
     public SimpleArrayList<Category> loadCategories(String filename) {
         SimpleArrayList<Category> categories = new SimpleArrayList<>();
+        int categoryCounter = 1000;
         try (BufferedReader br = new BufferedReader(new FileReader(dataDir + filename))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length < 3) continue;
-                categories.add(new Category("CAT" + System.currentTimeMillis(), parts[0], parts[1], parts[2]));
+                categories.add(new Category("CAT" + String.format("%04d", categoryCounter++), parts[0], parts[1], parts[2]));
             }
         } catch (IOException e) {}
         return categories;
