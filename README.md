@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements an **offline, locally-stored, command-line expenditure tracking application** for Nkwa Real Estate Ltd, designed for DCIT308 at the University of Ghana.  
+This project implements an **offline, locally-stored, command-line expenditure tracking application** for Nkwa Real Estate Ltd, designed for DCIT308 semester project at the University of Ghana.  
 It uses **custom-built data structures only** (arrays, sets, maps, stacks, queues, heaps, etc.) and avoids all external libraries and Java Collections for business logic.
 
 ## Features
