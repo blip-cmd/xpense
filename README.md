@@ -93,6 +93,9 @@ RCT003|EXP003|receipts/brochure.pdf|2025-07-03T14:35:00
    ```
    java -cp bin app.Main
    ```
+   
+  java -jar "APP G68Xpense.jar"
+
 
 3. **Interact:**
    Use the CLI menu to add/view/edit expenditures, manage categories/accounts, view alerts, and analytics.
@@ -101,6 +104,9 @@ RCT003|EXP003|receipts/brochure.pdf|2025-07-03T14:35:00
     ```bash
     find . -type f -name "*.class" -delete
     ```
+
+5. ls "c:\blipping grounds\prjs\xpense\G68Xpense.jar"
+6. java -jar G68Xpense.jar
 
 | Operation                        | Data Structure        | Complexity           |
 |-----------------------------------|----------------------|----------------------|

@@ -18,25 +18,25 @@ public class ExpenditureManager {
      */
     private void initializeIdCounter() {
         int maxId = 1000; // Default starting point
-        System.out.println("DEBUG: initializeIdCounter called, expenditures.size() = " + expenditures.size());
+        // System.out.println("DEBUG: initializeIdCounter called, expenditures.size() = " + expenditures.size());
         for (Expenditure exp : expenditures) {
             String id = exp.getId();
-            System.out.println("DEBUG: Found expenditure with ID: " + id);
+            // System.out.println("DEBUG: Found expenditure with ID: " + id);
             if (id != null && id.startsWith("EXP")) {
                 try {
                     int numericPart = Integer.parseInt(id.substring(3));
-                    System.out.println("DEBUG: Parsed numeric part: " + numericPart);
+                    // System.out.println("DEBUG: Parsed numeric part: " + numericPart);
                     if (numericPart >= maxId) {
                         maxId = numericPart + 1;
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("DEBUG: Could not parse numeric part of ID: " + id);
+                    // System.out.println("DEBUG: Could not parse numeric part of ID: " + id);
                     // Ignore non-numeric IDs
                 }
             }
         }
         idCounter = maxId;
-        System.out.println("DEBUG: idCounter set to " + idCounter);
+        // System.out.println("DEBUG: idCounter set to " + idCounter);
     }
 
     /**
@@ -48,37 +48,37 @@ public class ExpenditureManager {
     }
 
     public boolean addExpenditure(Expenditure expenditure) {
-        System.out.println("DEBUG: addExpenditure called");
+        // System.out.println("DEBUG: addExpenditure called");
         if (expenditure == null) {
-            System.out.println("DEBUG: expenditure is null");
+            // System.out.println("DEBUG: expenditure is null");
             return false;
         }
         if (!expenditure.isValid()) {
-            System.out.println("DEBUG: expenditure is invalid");
-            System.out.println("DEBUG: description=" + expenditure.getDescription());
-            System.out.println("DEBUG: amount=" + expenditure.getAmount());
-            System.out.println("DEBUG: category=" + expenditure.getCategory());
-            System.out.println("DEBUG: dateTime=" + expenditure.getDateTime());
+            // System.out.println("DEBUG: expenditure is invalid");
+            // System.out.println("DEBUG: description=" + expenditure.getDescription());
+            // System.out.println("DEBUG: amount=" + expenditure.getAmount());
+            // System.out.println("DEBUG: category=" + expenditure.getCategory());
+            // System.out.println("DEBUG: dateTime=" + expenditure.getDateTime());
             return false;
         }
         
         // Generate ID if not provided
         if (expenditure.getId() == null || expenditure.getId().isBlank()) {
             String newId = generateUniqueId();
-            System.out.println("DEBUG: Generated new ID: " + newId + " (idCounter was " + idCounter + ")");
+            // System.out.println("DEBUG: Generated new ID: " + newId + " (idCounter was " + idCounter + ")");
             expenditure.setId(newId);
         } else {
-            System.out.println("DEBUG: Using existing ID: " + expenditure.getId());
+            // System.out.println("DEBUG: Using existing ID: " + expenditure.getId());
         }
         
         // Check for duplicate IDs
         for (Expenditure e : expenditures) {
             if (e.getId().equalsIgnoreCase(expenditure.getId())) {
-                System.out.println("DEBUG: Duplicate ID found: " + expenditure.getId() + " already exists");
+                // System.out.println("DEBUG: Duplicate ID found: " + expenditure.getId() + " already exists");
                 return false;
             }
         }
-        System.out.println("DEBUG: No duplicate ID, adding expenditure with ID: " + expenditure.getId());
+        // System.out.println("DEBUG: No duplicate ID, adding expenditure with ID: " + expenditure.getId());
         expenditures.add(expenditure);
         return true;
     }
