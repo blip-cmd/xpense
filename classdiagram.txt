@@ -1,0 +1,374 @@
+@startuml
+
+title Class Diagram - Nkwa Real Estate Expenditure Management System (Xpense)
+
+' Core Domain Classes
+class Expenditure {
+  - id: String
+  - description: String
+  - amount: BigDecimal
+  - category: Category
+  - dateTime: LocalDateTime
+  - phase: String
+  - bankAccountId: String
+  - receiptInfo: String
+  + Expenditure(id: String, description: String, amount: BigDecimal, category: Category, dateTime: LocalDateTime, phase: String)
+  + Expenditure(description: String, amount: BigDecimal, category: Category, dateTime: LocalDateTime, phase: String)
+  + Expenditure(id: String, description: String, amount: BigDecimal, category: Category, dateTime: LocalDateTime, phase: String, bankAccountId: String)
+  + getId(): String
+  + getDescription(): String
+  + getAmount(): BigDecimal
+  + getCategory(): Category
+  + getDateTime(): LocalDateTime
+  + getPhase(): String
+  + getBankAccountId(): String
+  + getReceiptInfo(): String
+  + setId(id: String): void
+  + setDescription(description: String): void
+  + setAmount(amount: BigDecimal): void
+  + setCategory(category: Category): void
+  + setDateTime(dateTime: LocalDateTime): void
+  + setPhase(phase: String): void
+  + setBankAccountId(bankAccountId: String): void
+  + setReceiptInfo(receiptInfo: String): void
+  + isValid(): boolean
+  + toString(): String
+}
+
+class BankAccount {
+  - accountNumber: String
+  - accountName: String
+  - balance: BigDecimal
+  - createdDate: LocalDate
+  - expenditures: SimpleArrayList<Expenditure>
+  + BankAccount(accountNumber: String, accountName: String)
+  + BankAccount(accountNumber: String, accountName: String, initialBalance: BigDecimal)
+  + getAccountNumber(): String
+  + getAccountName(): String
+  + getBalance(): BigDecimal
+  + getCreatedDate(): LocalDate
+  + getExpenditures(): SimpleArrayList<Expenditure>
+  + setAccountNumber(accountNumber: String): void
+  + setAccountName(accountName: String): void
+  + setBalance(balance: BigDecimal): void
+  + setCreatedDate(createdDate: LocalDate): void
+  + debit(amount: BigDecimal): boolean
+  + credit(amount: BigDecimal): boolean
+  + add_expenditure(e: Expenditure): void
+  + toString(): String
+}
+
+class Category {
+  - id: String
+  - name: String
+  - description: String
+  - color: String
+  + Category(id: String, name: String, description: String, color: String)
+  + getId(): String
+  + getName(): String
+  + getDescription(): String
+  + getColor(): String
+  + setId(id: String): void
+  + setName(name: String): void
+  + setDescription(description: String): void
+  + setColor(color: String): void
+  + isValid(): boolean
+  + toString(): String
+  + equals(obj: Object): boolean
+  + hashCode(): int
+}
+
+class Receipt {
+  - receiptId: String
+  - expenseCode: String
+  - filePath: String
+  - timestamp: LocalDateTime
+  + Receipt()
+  + Receipt(receiptId: String, expenseCode: String, filePath: String, timestamp: LocalDateTime)
+  + getReceiptId(): String
+  + getExpenseCode(): String
+  + getFilePath(): String
+  + getTimestamp(): LocalDateTime
+  + setReceiptId(receiptId: String): void
+  + setExpenseCode(expenseCode: String): void
+  + setFilePath(filePath: String): void
+  + setTimestamp(timestamp: LocalDateTime): void
+  + toString(): String
+}
+
+' Management and Handler Classes
+class XpenseSystem {
+  - fileManager: FileManager
+  - alertSystem: AlertSystem
+  - categoryManager: CategoryManager
+  - bankLedger: BankLedger
+  - expenditureManager: ExpenditureManager
+  - receiptHandler: ReceiptHandler
+  - analyticsModule: AnalyticsModule
+  - searchAndSortModule: SearchAndSortModule
+  + XpenseSystem(lowBalanceThreshold: double, spendingLimitThreshold: double)
+  + getFileManager(): FileManager
+  + getAlertSystem(): AlertSystem
+  + getCategoryManager(): CategoryManager
+  + getBankLedger(): BankLedger
+  + getExpenditureManager(): ExpenditureManager
+  + getReceiptHandler(): ReceiptHandler
+  + getAnalyticsModule(): AnalyticsModule
+  + getSearchAndSortModule(): SearchAndSortModule
+  + loadData(): void
+  + saveData(): void
+}
+
+class BankLedger {
+  - accounts: SimpleMap<String, BankAccount>
+  - alertSystem: AlertSystem
+  + BankLedger(alertSystem: AlertSystem)
+  + addAccount(account: BankAccount): boolean
+  + getAccount(accountId: String): BankAccount
+  + getAllAccounts(): SimpleArrayList<BankAccount>
+  + logExpenditure(accountId: String, amount: BigDecimal, description: String): boolean
+}
+
+class CategoryManager {
+  - categories: SimpleSet<Category>
+  - categoryExpenditures: SimpleMap<String, SimpleArrayList<Expenditure>>
+  + CategoryManager()
+  + addCategory(category: Category): boolean
+  + validateCategory(categoryName: String): boolean
+  + getAllCategories(): SimpleArrayList<Category>
+  + addExpenditureToCategory(categoryName: String, expenditure: Expenditure): boolean
+}
+
+class ExpenditureManager {
+  - expenditures: SimpleArrayList<Expenditure>
+  - {static} idCounter: int
+  + ExpenditureManager()
+  - initializeIdCounter(): void
+  - generateUniqueId(): String
+  + addExpenditure(expenditure: Expenditure): boolean
+  + getAllExpenditures(): SimpleArrayList<Expenditure>
+  + getExpenditureById(id: String): Expenditure
+}
+
+class ReceiptHandler {
+  - receipts: SimpleArrayList<Receipt>
+  - processingQueue: SimpleQueue<Receipt>
+  - processedStack: SimpleStack<Receipt>
+  + ReceiptHandler()
+  + addReceipt(receipt: Receipt): void
+  + getAllReceipts(): SimpleArrayList<Receipt>
+}
+
+class CLIHandler {
+  - {static} RESET: String
+  - {static} RED: String
+  - {static} GREEN: String
+  - {static} BLUE: String
+  - {static} YELLOW: String
+  - {static} PURPLE: String
+  - {static} CYAN: String
+  - {static} WHITE: String
+  - {static} BOLD: String
+  - system: XpenseSystem
+  - scanner: Scanner
+  + CLIHandler(system: XpenseSystem)
+  + displayMenu(): void
+  + handleInput(): void
+  - displayMainMenu(): void
+  - handleMainMenuChoice(choice: int): void
+  - displayExpenditureMenu(): void
+  - displayBankAccountMenu(): void
+  - displayCategoryMenu(): void
+  - displayReportsMenu(): void
+  - displayReceiptMenu(): void
+}
+
+class FileManager {
+  - dataDir: String
+  + FileManager()
+  + loadExpenditures(filename: String): SimpleArrayList<Expenditure>
+  + saveExpenditures(expenditures: SimpleArrayList<Expenditure>, filename: String): boolean
+  + loadBankAccounts(filename: String): SimpleArrayList<BankAccount>
+  + saveBankAccounts(accounts: SimpleArrayList<BankAccount>, filename: String): boolean
+  + loadCategories(filename: String): SimpleArrayList<Category>
+  + saveCategories(categories: SimpleArrayList<Category>, filename: String): boolean
+}
+
+' Analysis and Support Classes
+class AnalyticsModule {
+  + calculateMonthlyBurn(expenditures: SimpleArrayList<Expenditure>): BigDecimal
+  + generateCostAnalysis(expenditures: SimpleArrayList<Expenditure>): String
+  + calculateWeeklyBurn(expenditures: SimpleArrayList<Expenditure>): BigDecimal
+  + calculateDailyAverage(expenditures: SimpleArrayList<Expenditure>): BigDecimal
+  + getTopCategories(expenditures: SimpleArrayList<Expenditure>, limit: int): String
+  + calculateAffordabilityIndex(totalBudget: BigDecimal, expenditures: SimpleArrayList<Expenditure>): double
+}
+
+class AlertSystem {
+  - heap: MinHeap<Alert>
+  - lowBalanceThreshold: double
+  - spendingLimitThreshold: double
+  + AlertSystem(lowBalanceThreshold: double, spendingLimitThreshold: double)
+  + addAlert(message: String, priority: int): void
+  + getNextAlert(): String
+  + hasAlerts(): boolean
+  + checkLowFunds(accountId: String, currentBalance: double): boolean
+  + checkSpendingLimit(amount: double): boolean
+}
+
+class Alert {
+  + message: String
+  + priority: int
+  + Alert(message: String, priority: int)
+}
+
+class SearchAndSortModule {
+  + sortByCategoryAlphabetical(expenditures: SimpleArrayList<Expenditure>): SimpleArrayList<Expenditure>
+  + sortByDateChronological(expenditures: SimpleArrayList<Expenditure>): SimpleArrayList<Expenditure>
+  + sortByAmountAscending(expenditures: SimpleArrayList<Expenditure>): SimpleArrayList<Expenditure>
+  + sortByAmountDescending(expenditures: SimpleArrayList<Expenditure>): SimpleArrayList<Expenditure>
+  + searchByCategory(expenditures: SimpleArrayList<Expenditure>, categoryName: String): SimpleArrayList<Expenditure>
+  + searchByDateRange(expenditures: SimpleArrayList<Expenditure>, startDate: LocalDate, endDate: LocalDate): SimpleArrayList<Expenditure>
+  + searchByAmountRange(expenditures: SimpleArrayList<Expenditure>, minAmount: BigDecimal, maxAmount: BigDecimal): SimpleArrayList<Expenditure>
+}
+
+' Utility Data Structure Classes
+class SimpleArrayList<T> {
+  - data: Object[]
+  - size: int
+  - capacity: int
+  + SimpleArrayList()
+  + SimpleArrayList(initialCapacity: int)
+  + add(element: T): void
+  + get(index: int): T
+  + set(index: int, element: T): void
+  + remove(index: int): T
+  + size(): int
+  + isEmpty(): boolean
+  + contains(element: T): boolean
+  + clear(): void
+  + toArray(): Object[]
+}
+
+class SimpleMap<K, V> {
+  - keys: SimpleArrayList<K>
+  - values: SimpleArrayList<V>
+  + SimpleMap()
+  + put(key: K, value: V): V
+  + get(key: K): V
+  + getAt(index: int): V
+  + getKeyAt(index: int): K
+  + containsKey(key: K): boolean
+  + remove(key: K): V
+  + size(): int
+  + isEmpty(): boolean
+  + clear(): void
+}
+
+class SimpleQueue<T> {
+  - queue: SimpleArrayList<T>
+  + SimpleQueue()
+  + offer(element: T): void
+  + poll(): T
+  + peek(): T
+  + isEmpty(): boolean
+  + size(): int
+}
+
+class SimpleStack<T> {
+  - stack: SimpleArrayList<T>
+  + SimpleStack()
+  + push(element: T): void
+  + pop(): T
+  + peek(): T
+  + isEmpty(): boolean
+  + size(): int
+}
+
+class SimpleSet<T> {
+  - elements: SimpleArrayList<T>
+  + SimpleSet()
+  + add(element: T): boolean
+  + remove(element: T): boolean
+  + contains(element: T): boolean
+  + size(): int
+  + isEmpty(): boolean
+  + clear(): void
+  + toList(): SimpleArrayList<T>
+}
+
+class SimpleTreeMap<K, V> {
+  - root: Node<K, V>
+  - size: int
+  + SimpleTreeMap()
+  + put(key: K, value: V): V
+  + get(key: K): V
+  + remove(key: K): V
+  + containsKey(key: K): boolean
+  + size(): int
+  + isEmpty(): boolean
+}
+
+class MinHeap<T> {
+  - heap: SimpleArrayList<T>
+  - comparator: PriorityComparator<T>
+  + MinHeap(comparator: PriorityComparator<T>)
+  + insert(element: T): void
+  + removeMin(): T
+  + peek(): T
+  + isEmpty(): boolean
+  + size(): int
+  - heapifyUp(index: int): void
+  - heapifyDown(index: int): void
+}
+
+interface PriorityComparator<T> {
+  + compare(a: T, b: T): int
+}
+
+' Entry Point
+class Main {
+  + {static} main(args: String[]): void
+}
+
+' Relationships
+Expenditure --> Category : "uses"
+Expenditure --> BankAccount : "belongs to"
+BankAccount --> Expenditure : "contains"
+Receipt --> Expenditure : "linked to via expenseCode"
+
+XpenseSystem --> FileManager : "manages"
+XpenseSystem --> AlertSystem : "manages"
+XpenseSystem --> CategoryManager : "manages"
+XpenseSystem --> BankLedger : "manages"
+XpenseSystem --> ExpenditureManager : "manages"
+XpenseSystem --> ReceiptHandler : "manages"
+XpenseSystem --> AnalyticsModule : "manages"
+XpenseSystem --> SearchAndSortModule : "manages"
+
+BankLedger --> BankAccount : "manages"
+BankLedger --> AlertSystem : "uses"
+CategoryManager --> Category : "manages"
+ExpenditureManager --> Expenditure : "manages"
+ReceiptHandler --> Receipt : "manages"
+
+CLIHandler --> XpenseSystem : "uses"
+Main --> XpenseSystem : "creates"
+Main --> CLIHandler : "creates"
+
+AlertSystem --> MinHeap : "uses"
+AlertSystem --> Alert : "manages"
+ReceiptHandler --> SimpleQueue : "uses"
+ReceiptHandler --> SimpleStack : "uses"
+BankLedger --> SimpleMap : "uses"
+CategoryManager --> SimpleSet : "uses"
+CategoryManager --> SimpleMap : "uses"
+ExpenditureManager --> SimpleArrayList : "uses"
+BankAccount --> SimpleArrayList : "uses"
+
+AnalyticsModule --> Expenditure : "analyzes"
+SearchAndSortModule --> Expenditure : "processes"
+
+MinHeap --> PriorityComparator : "uses"
+
+@enduml
