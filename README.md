@@ -25,6 +25,13 @@ It uses **custom-built data structures only** (arrays, sets, maps, stacks, queue
 - `SimpleQueue` - FIFO for receipts
 - `SimpleStack` - LIFO for receipts
 - `MinHeap` - alert priorities
+- `SimpleTreeMap` - ordered key-value mappings
+
+📚 **For detailed documentation on data structures, see:**
+- [`docs/DSA Report.md`](docs/DSA%20Report.md) - Comprehensive data structures architecture
+- [`docs/DATA_STRUCTURES_OVERVIEW.md`](docs/DATA_STRUCTURES_OVERVIEW.md) - Quick reference and visual overview  
+- [`docs/IMPLEMENTATION_EXAMPLES.md`](docs/IMPLEMENTATION_EXAMPLES.md) - Practical code examples
+- [`docs/DATA_STRUCTURES_VALIDATION.md`](docs/DATA_STRUCTURES_VALIDATION.md) - Implementation validation
 
 ## File Structure
 
