@@ -2,13 +2,13 @@
 **Group 68 - DCIT308 DSA II Project**
 
 ## Team Members:
-1. **Fenteng Michael** - 11210750
-2. **Samuel Akpah** - 11125009
-3. **Ryan Brown** - 11357610
-4. **Wisdom Nana-Abena Ogbonna** - 11288300
-5. **Michel Kpodo** - 11012578
-6. **Ransford Larbi** - 10681368
-7. **Adams Emmanuel Paddy** - 11264136
+1. **Fenteng Michael**
+2. **Samuel Akpah**
+3. **Ryan Brown**
+4. **Wisdom Nana-Abena Ogbonna**
+5. **Michel Kpodo**
+6. **Ransford Larbi**
+7. **Adams Emmanuel Paddy**
 
 ---
 
